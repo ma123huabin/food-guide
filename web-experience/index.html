@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>一城一味 · 今日点亮</title>
+<style>
+  :root{
+    --pink:#fde7e3; --pink-d:#f6cfc8; --ink:#5a3b34; --gold:#e8923a; --gold-d:#c9742a;
+    --red:#e0443e; --red-d:#c2332e; --green:#3aa76d;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+    background:#2b2326;
+    display:flex;justify-content:center;align-items:center;
+    color:var(--ink);
+  }
+  /* 手机外框 */
+  #phone{
+    position:relative;width:100%;max-width:480px;height:100vh;max-height:854px;
+    background:
+      radial-gradient(circle at 20% 10%, #fff5f2 0%, transparent 40%),
+      radial-gradient(circle at 80% 90%, #ffeede 0%, transparent 45%),
+      linear-gradient(160deg,#fde7e3 0%,#f8d9d2 100%);
+    overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.4);
+  }
+  /* 纸纹 */
+  #phone::before{
+    content:"";position:absolute;inset:0;pointer-events:none;opacity:.06;
+    background-image:radial-gradient(#000 1px,transparent 1px);
+    background-size:7px 7px;
+  }
+  .screen{position:absolute;inset:0;display:none;flex-direction:column;}
+  .screen.active{display:flex;}
+
+  /* ---------- 首页 ---------- */
+  #home{padding:0 0 0 0;}
+  .title{
+    text-align:center;padding:42px 16px 10px;
+  }
+  .title h1{
+    margin:0;font-size:30px;letter-spacing:3px;font-weight:800;
+    background:linear-gradient(180deg,var(--gold) 0%,var(--gold-d) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 2px 0 rgba(255,255,255,.5);
+  }
+  .title p{margin:8px 0 0;font-size:13px;color:#a8746a;letter-spacing:1px;}
+
+  .carousel{
+    flex:1;position:relative;overflow:hidden;display:flex;align-items:center;
+  }
+  .track{
+    display:flex;gap:18px;padding:0 calc(50% - 100px);will-change:transform;
+    align-items:center;
+  }
+  .card{
+    flex:0 0 auto;width:200px;height:280px;border-radius:22px;position:relative;
+    background:linear-gradient(160deg,#fff 0%,#fff3ec 100%);
+    box-shadow:0 10px 24px rgba(180,90,70,.18);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    transition:transform .25s ease, box-shadow .25s ease, opacity .25s ease;
+    opacity:.55;transform:scale(.82);
+  }
+  .card .emoji{font-size:74px;line-height:1;filter:drop-shadow(0 6px 8px rgba(0,0,0,.12));}
+  .card .cname{margin-top:14px;font-size:24px;font-weight:800;color:var(--ink);}
+  .card .ctag{margin-top:6px;font-size:12px;color:#b07c72;}
+  .card.lit{
+    opacity:1;transform:scale(1.02);
+    box-shadow:0 0 0 4px var(--gold),0 14px 30px rgba(232,146,58,.45);
+  }
+  .card.locked{filter:grayscale(.9);opacity:.4;transform:scale(.78);}
+  .card.locked .emoji{opacity:.5;}
+  .card .lock{position:absolute;top:12px;right:14px;font-size:18px;}
+  .card .glow{
+    position:absolute;inset:-4px;border-radius:24px;pointer-events:none;
+    background:radial-gradient(circle,rgba(255,210,120,.55),transparent 70%);
+    opacity:0;animation:pulse 1.6s ease-in-out infinite;
+  }
+  .card.lit .glow{opacity:1;}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.06);opacity:.9}}
+
+  .thumbstrip{
+    display:flex;gap:10px;justify-content:center;padding:10px 12px 6px;flex-wrap:wrap;
+  }
+  .thumb{
+    width:54px;height:54px;border-radius:14px;background:#fff;display:flex;
+    align-items:center;justify-content:center;font-size:26px;
+    box-shadow:0 4px 10px rgba(180,90,70,.15);border:2px solid transparent;
+  }
+  .thumb.on{border-color:var(--gold);}
+  .thumb.locked{filter:grayscale(.9);opacity:.5;}
+
+  .bottom{padding:8px 24px 28px;display:flex;flex-direction:column;align-items:center;gap:10px;}
+  .btn{
+    border:none;cursor:pointer;font-family:inherit;font-weight:700;color:#fff;
+    border-radius:999px;padding:14px 40px;font-size:17px;letter-spacing:1px;
+    background:linear-gradient(180deg,var(--gold) 0%,var(--gold-d) 100%);
+    box-shadow:0 8px 18px rgba(201,116,42,.4);transition:transform .12s;
+  }
+  .btn:active{transform:scale(.96);}
+  .btn.hint{background:linear-gradient(180deg,#f3a85c,#e0842f);font-size:14px;padding:10px 22px;}
+  .btn.ghost{background:transparent;color:var(--gold-d);box-shadow:none;font-size:13px;padding:6px;}
+
+  /* ---------- 详情页 ---------- */
+  #detail{padding:0;}
+  .topbar{
+    display:flex;align-items:center;gap:10px;padding:42px 16px 8px;
+  }
+  .back{
+    border:none;background:rgba(255,255,255,.7);border-radius:50%;width:36px;height:36px;
+    font-size:18px;cursor:pointer;color:var(--ink);
+  }
+  .topbar h2{margin:0;font-size:22px;font-weight:800;}
+  .topbar .sub{font-size:12px;color:#a8746a;}
+
+  .section-title{font-size:15px;font-weight:800;padding:12px 18px 4px;color:var(--ink);}
+  .food-scroll{display:flex;gap:12px;overflow-x:auto;padding:6px 18px 10px;scroll-snap-type:x mandatory;}
+  .food-scroll::-webkit-scrollbar{display:none;}
+  .food{
+    flex:0 0 auto;width:130px;background:#fff;border-radius:16px;padding:12px;
+    box-shadow:0 6px 14px rgba(180,90,70,.14);scroll-snap-align:start;
+  }
+  .food .fe{font-size:34px;}
+  .food .fn{font-size:15px;font-weight:800;margin-top:4px;}
+  .food .fd{font-size:11px;color:#b07c72;margin-top:2px;}
+
+  .map-wrap{
+    margin:6px 16px;flex:1;min-height:0;border-radius:18px;overflow:hidden;position:relative;
+    background:#f3e6cf;border:3px solid #fff;box-shadow:0 8px 20px rgba(180,90,70,.18);
+  }
+  .map-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+  .map-ph{
+    width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    color:#9c7b54;font-size:13px;gap:6px;
+    background:
+      radial-gradient(circle at 30% 30%,#f7ecd6,transparent 40%),
+      radial-gradient(circle at 70% 70%,#efe0c2,transparent 40%),#f1e3c8;
+  }
+  .spot{
+    position:absolute;width:18px;height:18px;transform:translate(-50%,-50%);
+    border-radius:50%;background:var(--red);border:3px solid #fff;
+    box-shadow:0 2px 6px rgba(0,0,0,.35);cursor:pointer;animation:blink 1.4s infinite;
+  }
+  .spot::after{content:"";position:absolute;inset:-7px;border-radius:50%;border:2px solid rgba(224,68,62,.4);}
+  @keyframes blink{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.25)}}
+
+  .popup{
+    position:absolute;left:50%;bottom:14px;transform:translateX(-50%);
+    background:#fff;border-radius:14px;padding:12px 16px;width:84%;
+    box-shadow:0 10px 24px rgba(0,0,0,.25);display:none;z-index:5;
+  }
+  .popup.show{display:block;animation:rise .2s ease;}
+  @keyframes rise{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+  .popup .pn{font-weight:800;font-size:15px;}
+  .popup .pd{font-size:12px;color:#7a5950;margin-top:4px;}
+  .popup .px{position:absolute;right:12px;top:8px;cursor:pointer;color:#bbb;font-size:16px;}
+
+  .checkin{margin:10px 16px 22px;}
+  .checkin .btn{width:100%;font-size:18px;padding:16px;}
+  .status{text-align:center;font-size:13px;margin-top:8px;min-height:18px;color:#8a665c;}
+
+  .toast{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.9);
+    background:rgba(40,25,20,.92);color:#fff;padding:18px 26px;border-radius:16px;
+    font-size:16px;font-weight:700;text-align:center;opacity:0;pointer-events:none;
+    transition:opacity .25s,transform .25s;z-index:20;max-width:80%;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
+</style>
+</head>
+<body>
+<div id="phone">
+  <!-- 首页 -->
+  <section id="home" class="screen active">
+    <div class="title">
+      <h1>一城一味</h1>
+      <p>· 今日点亮 ·</p>
+    </div>
+    <div class="carousel">
+      <div class="track" id="track"></div>
+    </div>
+    <div class="thumbstrip" id="thumbs"></div>
+    <div class="bottom">
+      <button class="btn" id="lightBtn">随机点亮</button>
+      <div class="status" id="homeStatus"></div>
+      <button class="btn ghost" id="enterBtn" style="display:none">点击已点亮卡片进入 →</button>
+    </div>
+  </section>
+
+  <!-- 详情页 -->
+  <section id="detail" class="screen">
+    <div class="topbar">
+      <button class="back" id="backBtn">←</button>
+      <div>
+        <h2 id="dCity">城市</h2>
+        <div class="sub" id="dSub">推荐美食点</div>
+      </div>
+    </div>
+    <div class="section-title">🍜 热门美食</div>
+    <div class="food-scroll" id="foods"></div>
+    <div class="section-title">🗺️ 美食地图</div>
+    <div class="map-wrap" id="mapWrap"></div>
+    <div class="popup" id="popup">
+      <span class="px" id="popClose">✕</span>
+      <div class="pn" id="popName"></div>
+      <div class="pd" id="popDesc"></div>
+    </div>
+    <div class="checkin">
+      <button class="btn" id="checkinBtn">我要打卡</button>
+      <div class="status" id="checkStatus"></div>
+    </div>
+    <div class="toast" id="toast"></div>
+  </section>
+</div>
+
+<script>
+/* ===================== 数据 ===================== */
+const CITIES = [
+  { id:'yichang', name:'宜昌', emoji:'🌊', color:'#4a90d9',
+    center:[30.6917,111.2867], radiusKm:45,
+    map:'yichang.png',
+    foods:[['🥟','萝卜饺子','解放路'],['🍧','宜昌凉虾','二马路'],['🍜','红油小面','陶珠路'],['🍠','三峡苕酥','夷陵广场'],['🌶️','榨广椒','西陵']],
+    spots:[['二马路凉虾','冰镇甜蜜，夏日限定',0.30,0.52],['陶珠路夜市','烧烤小面聚集地',0.55,0.40],['夷陵广场','city center 美食圈',0.46,0.68],['滨江萝卜饺子','外酥里嫩招牌',0.72,0.60]] },
+  { id:'chengdu', name:'成都', emoji:'🐼', color:'#e08a3c',
+    center:[30.5728,104.0668], radiusKm:50, map:null,
+    foods:[['🍲','火锅','春熙路'],['🍢','串串香','玉林'],['🍜','担担面','青石桥'],['🥟','龙抄手','总府路'],['🥟','钟水饺','提督街']],
+    spots:[['春熙路火锅','麻辣鲜香',0.35,0.45],['玉林串串','市井烟火',0.62,0.55],['宽窄巷子','小吃集合',0.50,0.30]] },
+  { id:'chongqing', name:'重庆', emoji:'🌶️', color:'#d9534f',
+    center:[29.4316,106.9123], radiusKm:50, map:null,
+    foods:[['🍲','重庆火锅','解放碑'],['🍜','重庆小面','磁器口'],['🍝','酸辣粉','较场口'],['🍲','毛血旺','南滨路'],['🍗','辣子鸡','歌乐山']],
+    spots:[['解放碑火锅','九宫格经典',0.48,0.42],['磁器口小面','老街味道',0.30,0.60],['南滨路','江景夜食',0.70,0.55]] },
+  { id:'guangzhou', name:'广州', emoji:'🍤', color:'#3aa76d',
+    center:[23.1291,113.2644], radiusKm:50, map:null,
+    foods:[['🍵','广式早茶','上下九'],['🍤','虾饺肠粉','北京路'],['🍖','烧腊','荔湾'],['🥣','艇仔粥','珠江'],['🍮','双皮奶','沙湾']],
+    spots:[['上下九早茶','一盅两件',0.40,0.48],['北京路肠粉','现拉现蒸',0.58,0.40],['珠江艇仔粥','水上风味',0.66,0.66]] },
+  { id:'xian', name:'西安', emoji:'🏯', locked:true },
+  { id:'wuhan', name:'武汉', emoji:'🌉', locked:true },
+];
+
+/* ===================== 状态 ===================== */
+let litCity = null;        // 已点亮的 city 对象
+let simulatedHere = null;  // 调试用：true=在城, false=在外地
+
+const $ = s => document.querySelector(s);
+const track = $('#track'), thumbs = $('#thumbs');
+
+/* ===================== 首页渲染 ===================== */
+function buildHome(){
+  track.innerHTML='';
+  CITIES.forEach((c,i)=>{
+    const el=document.createElement('div');
+    el.className='card'+(c.locked?' locked':'');
+    el.dataset.i=i;
+    el.innerHTML=(c.locked?'<div class="lock">🔒</div>':'<div class="glow"></div>')
+      +'<div class="emoji">'+(c.locked?'❔':c.emoji)+'</div>'
+      +'<div class="cname">'+(c.locked?'待解锁':c.name)+'</div>'
+      +'<div class="ctag">'+(c.locked?'点亮后开启':(c.foods?c.foods.length+'道美食':''))+'</div>';
+    if(!c.locked){
+      el.addEventListener('click',()=>{
+        if(litCity===c){ openDetail(c); }
+        else if(litCity){ flash('先点「随机点亮」或点击已点亮的卡片'); }
+      });
+    }
+    track.appendChild(el);
+  });
+  // 缩略条
+  thumbs.innerHTML='';
+  CITIES.forEach((c,i)=>{
+    const t=document.createElement('div');
+    t.className='thumb'+(c.locked?' locked':'');
+    t.textContent=c.locked?'🔒':c.emoji;
+    t.title=c.name;
+    thumbs.appendChild(t);
+  });
+}
+
+/* 把第 idx 张卡居中 */
+function centerCard(idx){
+  const card=track.children[idx];
+  if(!card) return;
+  const target=card.offsetLeft + card.offsetWidth/2 - track.parentElement.offsetWidth/2;
+  track.scrollLeft=target;
+}
+function updateThumbs(){
+  [...thumbs.children].forEach((t,i)=>{
+    t.classList.toggle('on', CITIES[i]===litCity);
+  });
+}
+
+/* 飞动锁定动画（弹性飞入并锁定到目标卡） */
+let spinning=false;
+function spinTo(idx){
+  if(spinning) return; spinning=true;
+  const card=track.children[idx];
+  const target=card.offsetLeft + card.offsetWidth/2 - track.parentElement.offsetWidth/2;
+  const start=track.scrollLeft;
+  const dur=1700, t0=performance.now();
+  // elastic out：先快速飞过、再回弹锁定
+  function ease(t){ if(t>=1) return 1; return Math.pow(2,-10*t)*Math.sin((t-0.075)*(2*Math.PI/0.3))+1; }
+  (function frame(now){
+    const p=Math.min(1,(now-t0)/dur);
+    track.scrollLeft=start+(target-start)*ease(p);
+    if(p<1) requestAnimationFrame(frame);
+    else { track.scrollLeft=target; finishLight(CITIES[idx]); spinning=false; }
+  })(performance.now());
+}
+
+function finishLight(city){
+  litCity=city;
+  [...track.children].forEach((el,i)=>{
+    el.classList.toggle('lit', CITIES[i]===city);
+    el.classList.toggle('locked', !!CITIES[i].locked);
+  });
+  updateThumbs();
+  $('#lightBtn').textContent='已点亮 ✓';
+  $('#enterBtn').style.display='inline-block';
+  $('#homeStatus').textContent='已点亮「'+city.name+'」，点击卡片或下方按钮进入';
+  flash('点亮成功：'+city.name+'！');
+}
+
+$('#lightBtn').addEventListener('click',()=>{
+  if(litCity){ openDetail(litCity); return; }
+  const unlocked=CITIES.map((c,i)=>({c,i})).filter(o=>!o.c.locked && o.c.foods);
+  const pick=unlocked[Math.floor(Math.random()*unlocked.length)];
+  spinTo(pick.i);
+});
+$('#enterBtn').addEventListener('click',()=>{ if(litCity) openDetail(litCity); });
+
+function flash(msg){
+  const t=$('#toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(flash._t); flash._t=setTimeout(()=>t.classList.remove('show'),1400);
+}
+
+/* ===================== 详情页 ===================== */
+function openDetail(city){
+  $('#dCity').textContent=city.name+' · 美食攻略';
+  $('#dSub').textContent='推荐美食点 · 共'+(city.foods?city.foods.length:0)+'道';
+  // 美食卡
+  const fc=$('#foods'); fc.innerHTML='';
+  (city.foods||[]).forEach(f=>{
+    const d=document.createElement('div'); d.className='food';
+    d.innerHTML='<div class="fe">'+f[0]+'</div><div class="fn">'+f[1]+'</div><div class="fd">'+f[2]+'</div>';
+    fc.appendChild(d);
+  });
+  // 地图
+  const mw=$('#mapWrap'); mw.innerHTML='';
+  if(city.map){
+    const img=new Image(); img.src=city.map; img.alt=city.name+'手绘地图'; mw.appendChild(img);
+  }else{
+    const ph=document.createElement('div'); ph.className='map-ph';
+    ph.innerHTML='🗺️<br>'+city.name+' 手绘地图建设中<br><span style="font-size:11px">红点为美食点示意</span>';
+    mw.appendChild(ph);
+  }
+  (city.spots||[]).forEach(s=>{
+    const dot=document.createElement('div'); dot.className='spot';
+    dot.style.left=(s[2]*100)+'%'; dot.style.top=(s[3]*100)+'%';
+    dot.addEventListener('click',()=>showPopup(s[0],s[1]));
+    mw.appendChild(dot);
+  });
+  $('#checkStatus').textContent='';
+  $('#home').classList.remove('active');
+  $('#detail').classList.add('active');
+}
+function showPopup(name,desc){
+  $('#popName').textContent=name; $('#popDesc').textContent=desc;
+  $('#popup').classList.add('show');
+}
+$('#popClose').addEventListener('click',()=>$('#popup').classList.remove('show'));
+$('#backBtn').addEventListener('click',()=>{
+  $('#detail').classList.remove('active'); $('#home').classList.add('active');
+});
+
+/* ===================== 打卡：浏览器定位识别城市 ===================== */
+function haversine(lat1,lon1,lat2,lon2){
+  const R=6371,toR=d=>d*Math.PI/180;
+  const dLat=toR(lat2-lat1), dLon=toR(lon2-lon1);
+  const a=Math.sin(dLat/2)**2+Math.cos(toR(lat1))*Math.cos(toR(lat2))*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+$('#checkinBtn').addEventListener('click',()=>{
+  if(!litCity) return;
+  const city=litCity;
+  if(simulatedHere!==null){ resolveCheck(city, simulatedHere); return; }
+  if(!navigator.geolocation){
+    askSimulate(city); return;
+  }
+  $('#checkStatus').textContent='正在获取你的位置…';
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      const d=haversine(pos.coords.latitude,pos.coords.longitude,city.center[0],city.center[1]);
+      resolveCheck(city, d<=city.radiusKm, d);
+    },
+    ()=>askSimulate(city),
+    {enableHighAccuracy:true,timeout:8000}
+  );
+});
+
+function resolveCheck(city, isHere, dist){
+  const st=$('#checkStatus');
+  if(isHere){
+    st.style.color='var(--green)';
+    st.textContent='✅ 打卡成功！你就在「'+city.name+'」，记录已留存～';
+    flash('打卡成功：'+city.name);
+  }else{
+    st.style.color='var(--red)';
+    st.textContent=(dist!=null?('距'+city.name+'约 '+Math.round(dist)+' km，') : '')
+      +'⚠️ 你不在「'+city.name+'」，无法打卡（打卡需在所在城市）';
+  }
+}
+/* 定位被拒/不可用时，提供模拟开关 */
+function askSimulate(city){
+  const st=$('#checkStatus');
+  st.style.color='#8a665c';
+  st.innerHTML='定位不可用，<a href="#" id="simIn" style="color:var(--gold-d)">模拟「我在'+city.name+'」</a> / '
+    +'<a href="#" id="simOut" style="color:var(--gold-d)">模拟「我在外地」</a>';
+  $('#simIn').onclick=e=>{e.preventDefault(); simulatedHere=true; resolveCheck(city,true);};
+  $('#simOut').onclick=e=>{e.preventDefault(); simulatedHere=false; resolveCheck(city,false);};
+}
+
+/* ===================== 初始化 ===================== */
+buildHome();
+// 首屏让第一张卡大致居中
+window.addEventListener('load',()=>{ centerCard(0); });
+setTimeout(()=>centerCard(0),60);
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+# Godot generated caches and build output
+.godot/
+/android/
+/build/
+/dist/
+/export/
+/exports/
+export_credentials.cfg
+
+# Local credentials, logs and editor files
+.env
+.env.*
+!.env.example
+*.log
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
