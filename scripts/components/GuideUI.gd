@@ -1,10 +1,10 @@
 class_name GuideUI
 extends RefCounted
 
-const INK = Color("713522")
-const GOLD = Color("d5a64e")
-const RED = Color("d93936")
-const CREAM = Color("fff9ea")
+const INK = Color("123e50")
+const GOLD = Color("dcf37c")
+const RED = Color("087da5")
+const CREAM = Color("e9faff")
 
 static func box(color: Color, radius: int = 18, border: Color = Color.TRANSPARENT, width: int = 0) -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
@@ -12,7 +12,7 @@ static func box(color: Color, radius: int = 18, border: Color = Color.TRANSPAREN
 	s.set_corner_radius_all(radius)
 	s.border_color = border
 	s.set_border_width_all(width)
-	s.shadow_color = Color(0.45, 0.18, 0.12, 0.14)
+	s.shadow_color = Color(0.0, 0.12, 0.20, 0.25)
 	s.shadow_size = 6
 	s.shadow_offset = Vector2(0, 4)
 	return s
@@ -41,7 +41,7 @@ static func label(parent: Node, text: String, rect: Rect2, font_size: int = 18, 
 	return l
 
 static func button(parent: Node, text: String, rect: Rect2, action: Callable, primary: bool = false) -> Button:
-	var b := Button.new()
+	var b: Button = TravelButton.new() if primary else Button.new()
 	b.text = text
 	b.position = rect.position
 	b.size = rect.size
@@ -50,10 +50,12 @@ static func button(parent: Node, text: String, rect: Rect2, action: Callable, pr
 	b.add_theme_color_override("font_color", CREAM if primary else INK)
 	b.add_theme_color_override("font_hover_color", Color.WHITE if primary else RED)
 	b.add_theme_color_override("font_pressed_color", CREAM if primary else INK)
-	b.add_theme_stylebox_override("normal", box(RED if primary else CREAM, 30 if primary else 14, GOLD if primary else Color("ead8bf"), 3 if primary else 1))
-	b.add_theme_stylebox_override("hover", box(Color("ec5745") if primary else Color("fff0d4"), 30 if primary else 14, GOLD, 3 if primary else 1))
-	b.add_theme_stylebox_override("pressed", box(Color("b92531") if primary else Color("f7dfb9"), 30 if primary else 14, GOLD, 2))
-	b.add_theme_stylebox_override("disabled", box(Color("c49a92"), 30 if primary else 14, GOLD, 2))
+	b.add_theme_stylebox_override("normal", box(RED if primary else CREAM, 30 if primary else 18, GOLD if primary else Color("86dbf2"), 3 if primary else 1))
+	b.add_theme_stylebox_override("hover", box(Color("20b4dc") if primary else Color("ceeffa"), 30 if primary else 18, GOLD, 3 if primary else 1))
+	b.add_theme_stylebox_override("pressed", box(Color("075774") if primary else Color("a8e5f6"), 30 if primary else 18, GOLD, 2))
+	b.add_theme_stylebox_override("disabled", box(Color("bdd8e3"), 30 if primary else 18, GOLD, 2))
+	b.add_theme_color_override("font_disabled_color", Color("557989"))
+	b.add_theme_stylebox_override("focus", box(Color.TRANSPARENT, 18, GOLD, 2))
 	b.pressed.connect(action)
 	parent.add_child(b)
 	return b
@@ -82,21 +84,28 @@ static func background(parent: Control) -> void:
 	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var shader := Shader.new()
-	shader.code = "shader_type canvas_item; void fragment(){vec2 p=UV; float n=fract(sin(dot(floor(p*vec2(960.,1708.)),vec2(12.9898,78.233)))*43758.5453); vec3 c=mix(vec3(1.,.94,.89),vec3(.96,.79,.83),p.y*.5+abs(p.x-.5)*.4); COLOR=vec4(c+(n-.5)*.035,1.);}"
+	shader.code = """shader_type canvas_item;
+void fragment(){
+ vec2 p = UV;
+ vec3 c = mix(vec3(0.016,0.09,0.13), vec3(0.025,0.23,0.30), smoothstep(0.0,0.76,p.y));
+ float glow = exp(-length((p-vec2(0.5,0.50))*vec2(2.5,3.0))*2.0);
+ c += vec3(0.015,0.10,0.13)*glow;
+ float edge = 0.742 + 0.004*sin(p.x*22.0) + 0.002*sin(p.x*61.0);
+ float shore = smoothstep(edge-0.002,edge+0.002,p.y);
+ vec3 ice = mix(vec3(0.60,0.88,0.97),vec3(0.78,0.96,1.0),p.y);
+ COLOR=vec4(mix(c,ice,shore),1.0);
+}"""
 	var mat := ShaderMaterial.new()
 	mat.shader = shader
 	bg.material = mat
 	parent.add_child(bg)
-	for i in range(14):
-		label(parent, "✦" if i % 3 else "❀", Rect2((i * 103 + 13) % 460, (i * 179 + 20) % 800, 25, 25), 13 + i % 3 * 4, Color("dcb579"), true)
 
 static func city_art(city: CityData) -> Texture2D:
-	if city.map_texture != null:
-		return city.map_texture
-	return atlas("res://assets/art/cities.png", GameData.city_index(city.city_id))
+	return city.cover_texture
 
 static func food_art(parent: Node, city: CityData, index: int, rect: Rect2) -> void:
-	if city.city_id == "quanzhou":
-		label(parent, ["面", "粽", "鸭", "鲜"][index], rect, 42, RED, true)
+	if city.popular_foods[index].image_texture != null:
+		var food_image := picture(parent, city.popular_foods[index].image_texture, rect)
+		food_image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	else:
-		picture(parent, atlas("res://assets/art/foods.png", GameData.city_index(city.city_id) * 4 + index, 4), rect)
+		label(parent, city.popular_foods[index].name.left(1), rect, 42, RED, true)

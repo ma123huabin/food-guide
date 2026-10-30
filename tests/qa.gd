@@ -36,6 +36,7 @@ func capture(filename: String) -> void:
 
 func _run() -> void:
 	_gd = root.get_node("GameData")
+	_gd.SAVE_PATH = "user://food-journey-qa.json"
 	_loc = root.get_node("LocationService")
 	_had_save = FileAccess.file_exists(_gd.SAVE_PATH)
 	if _had_save:
@@ -49,43 +50,80 @@ func _run() -> void:
 	await create_timer(0.5).timeout
 	await capture("home.png")
 	var home = main.home
+	# Exercise timer-driven movement, wrapping, visibility pause and manual delay.
+	var initial_lit: int = _gd.lit_count()
+	home.autoplay_interval = 0.2
+	home.autoplay_transition_duration = 0.05
+	home._autoplay_remaining = 0.01
+	var before: int = home._selected
+	await create_timer(0.12).timeout
+	check(home._selected == (before + 1) % _gd.ACTIVE_CITY_COUNT, "autoplay advances without a click")
+	check(_gd.lit_count() == initial_lit, "autoplay never lights a city")
+	home._select_thumb(_gd.ACTIVE_CITY_COUNT - 1)
+	await create_timer(0.4).timeout
+	home._autoplay_remaining = 0.01
+	await create_timer(0.12).timeout
+	check(home._selected == 0, "autoplay wraps from last city to first")
+	home.autoplay_direction = -1
+	home._autoplay_remaining = 0.01
+	await create_timer(0.12).timeout
+	check(home._selected == _gd.ACTIVE_CITY_COUNT - 1, "reverse autoplay wraps to last city")
+	home.visible = false
+	before = home._selected
+	await create_timer(0.4).timeout
+	check(home._selected == before, "autoplay pauses while home is hidden")
+	home.visible = true
+	home._select_thumb(0)
+	await create_timer(0.7).timeout
+	check(home._selected == 0, "manual selection pauses autoplay")
+	home.autoplay_enabled = false
+	home._autoplay_remaining = 0.01
+	await create_timer(0.3).timeout
+	check(home._selected == 0, "autoplay switch disables automatic movement")
+	home.autoplay_enabled = true
+	home.autoplay_direction = 1
+	home.autoplay_interval = 3.0
+	home.autoplay_transition_duration = 0.45
+	home._autoplay_remaining = 3.0
+	var removed_copy := ["城 市 寻 味  /  FOOD JOURNEY", "✧  一城一味 · 风物收藏  ✧", "已点亮 · 点击探索  →", "等待你的美食奇遇"]
+	var removed_found := false
+	for label in home.find_children("*", "Label", true, false):
+		if label.text in removed_copy or label.text.begins_with("已点亮 0 /"):
+			removed_found = true
+	check(not removed_found, "red-box text removed from all carousel copies")
 	print("QA viewport=" + str(root.size) + " logical=" + str(main.size))
 	await click_at(Vector2(240, 778))
 	check(home._busy, "real button starts carousel")
 	await click_at(Vector2(240, 778))
 	check(_gd.lit_count() == 0, "drawing cannot be completed by rapid double click")
-	await create_timer(3.9).timeout
+	await create_timer(5.4).timeout
 	check(_gd.lit_count() == 1, "animation lights exactly one city")
 	check(not home._busy, "carousel unlocks after animation")
 	await capture("home-lit.png")
-	await click_at(Vector2(240, 411))
-	check(main.detail.visible and not home.visible, "click lit center card opens detail")
+	await click_at(Vector2(42, 680))
+	check(main.detail.visible and not home.visible, "collected thumbnail opens detail after big card leaves list")
 	var detail = main.detail
 	for city in _gd.cities:
-		if not city.locked:
+		if _loc.has_boundary(city.city_id):
 			check(_loc.contains_coordinate(city.city_id, city.center_lat, city.center_lng), "city center is within administrative boundary: " + city.city_id)
 	check(_loc.contains_coordinate("yichang", 30.825, 110.976), "Yichang includes Zigui beyond center radius")
 	check(_loc.contains_coordinate("chengdu", 31.0036, 103.6186), "Chengdu includes Dujiangyan beyond center radius")
 	check(not _loc.contains_coordinate("chengdu", 29.56, 106.55), "Chongqing is outside Chengdu boundary")
-	await click_at(Vector2(85, 205))
+	await click_at(Vector2(78, 660))
 	check(is_instance_valid(detail._modal), "food card opens introduction")
+	var food_popup: Control = detail._modal.get_node("FoodPopup")
+	check(food_popup.size.y > food_popup.size.x and food_popup.position.y >= 0 and food_popup.position.y + food_popup.size.y <= detail.size.y, "food popup is portrait and fits phone screen")
+	check(food_popup.get_node("FoodName").position.y < food_popup.get_node("FoodDistrict").position.y, "food name appears before its urban district")
+	var popup_buttons := food_popup.find_children("*", "Button", true, false)
+	check(popup_buttons.size() == 1 and popup_buttons[0] is TravelButton, "food popup uses blue travel capsule button")
 	detail._close_modal()
-	var press := InputEventMouseButton.new()
-	press.button_index = MOUSE_BUTTON_LEFT
-	press.pressed = true
-	press.position = Vector2(350, 205)
-	root.push_input(press, true)
-	var swipe := InputEventMouseMotion.new()
-	swipe.position = Vector2(120, 205)
-	swipe.relative = Vector2(-230, 0)
-	swipe.button_mask = MOUSE_BUTTON_MASK_LEFT
-	root.push_input(swipe, true)
-	var release := InputEventMouseButton.new()
-	release.button_index = MOUSE_BUTTON_LEFT
-	release.position = Vector2(120, 205)
-	root.push_input(release, true)
-	await process_frame
-	check(detail._food_scroll.scroll_horizontal > 0 and not is_instance_valid(detail._modal), "food swipe scrolls without accidental popup")
+	await click_at(Vector2(400, 660))
+	check(is_instance_valid(detail._modal), "fourth food card is fully visible and clickable")
+	detail._close_modal()
+	check(detail._food_scroll.get_h_scroll_bar().max_value <= detail._food_scroll.size.x, "four food cards fit without horizontal clipping")
+	var map_host: Control = detail._map_view
+	var food_tray: Control = detail._dynamic.get_node("FoodTray")
+	check((map_host == null or (map_host is MapViewport and map_host.size == main.size)) and food_tray.position == Vector2(18, 550), "available full-screen map sits beneath fixed food tray")
 	for city in _gd.cities:
 		if city.locked:
 			continue
@@ -99,7 +137,7 @@ func _run() -> void:
 	# Test location decisions with injected coordinates; never fabricate a live location.
 	detail.load_city("yichang")
 	await process_frame
-	await click_at(Vector2(128, 464))
+	detail._map_view._pick(detail._map_view._world.position + detail._map_view._spots[0] * detail._map_view._world.scale)
 	check(is_instance_valid(detail._modal), "map red pin opens introduction")
 	detail._close_modal()
 	detail._pending_city = "yichang"
@@ -119,7 +157,7 @@ func _run() -> void:
 	check(_gd.checkins.has("yichang"), "in-range location records check-in")
 	await capture("checkin.png")
 	_gd._load_progress()
-	check(_gd.checkins.has("yichang") and _gd.lit_count() == 4, "progress survives save and reload without duplicate cities")
+	check(_gd.checkins.has("yichang") and _gd.lit_count() == _gd.ACTIVE_CITY_COUNT, "progress survives save and reload without duplicate cities")
 	detail._close_modal()
 	await click_at(Vector2(59, 40))
 	check(home.visible and not detail.visible, "back button returns home")

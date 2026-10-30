@@ -1,0 +1,1675 @@
+{
+  "schema_version": 1,
+  "cities": [
+    {
+      "id": "yichang",
+      "name": "宜昌",
+      "enabled": true,
+      "landmark": "三峡",
+      "cover_image": {
+        "path": "res://img/城市封面图/宜昌城市封面图.png"
+      },
+      "flat_map_image": {
+        "path": "res://img/城市美食地图/宜昌城市美食地图.png"
+      },
+      "map_status": "已绘制",
+      "food_atlas_index": 0,
+      "center_lat": 30.69,
+      "center_lng": 111.29,
+      "foods": [
+        {
+          "name": "红油小面",
+          "district": "解放路",
+          "description": "麻辣鲜香，风味独特",
+          "map_position": [
+            0.22,
+            0.24
+          ],
+          "image": {
+            "path": "res://img/美食图片/宜昌红油小面.png"
+          },
+          "urban_district": "西陵区"
+        },
+        {
+          "name": "萝卜饺子",
+          "district": "西陵",
+          "description": "外皮焦脆，馅料鲜嫩",
+          "map_position": [
+            0.18,
+            0.62
+          ],
+          "image": {
+            "path": "res://img/美食图片/宜昌萝卜饺子.png"
+          },
+          "urban_district": "西陵区"
+        },
+        {
+          "name": "肥鱼火锅",
+          "district": "滨江",
+          "description": "江鲜美味，汤浓肉嫩",
+          "map_position": [
+            0.75,
+            0.32
+          ],
+          "image": {
+            "path": "res://img/美食图片/宜昌肥鱼火锅.png"
+          },
+          "urban_district": ""
+        },
+        {
+          "name": "清江鱼糕",
+          "district": "夷陵",
+          "description": "鱼肉细腻，口感弹牙",
+          "map_position": [
+            0.75,
+            0.72
+          ],
+          "image": {
+            "path": "res://img/美食图片/宜昌清江鱼糕.png"
+          },
+          "urban_district": "夷陵区"
+        }
+      ],
+      "tagline": "三峡铺画卷，江鲜暖人间。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    },
+    {
+      "id": "chengdu",
+      "name": "成都",
+      "enabled": true,
+      "landmark": "熊猫·锦里",
+      "cover_image": {
+        "path": "res://img/城市封面图/成都城市封面图.png"
+      },
+      "flat_map_image": {
+        "path": "res://img/城市美食地图/成都城市美食地图.png"
+      },
+      "map_status": "已绘制",
+      "food_atlas_index": 1,
+      "center_lat": 30.57,
+      "center_lng": 104.07,
+      "foods": [
+        {
+          "name": "火锅",
+          "district": "春熙路",
+          "description": "麻辣鲜香，红油翻滚",
+          "map_position": [
+            0.22,
+            0.24
+          ],
+          "image": {
+            "path": "res://img/美食图片/成都火锅.png"
+          },
+          "urban_district": "锦江区"
+        },
+        {
+          "name": "串串香",
+          "district": "玉林",
+          "description": "市井烟火，自选竹签",
+          "map_position": [
+            0.18,
+            0.62
+          ],
+          "image": {
+            "path": "res://img/美食图片/成都串串香.png"
+          },
+          "urban_district": "武侯区"
+        },
+        {
+          "name": "担担面",
+          "district": "宽窄巷子",
+          "description": "咸鲜微辣，麻香十足",
+          "map_position": [
+            0.75,
+            0.32
+          ],
+          "image": {
+            "path": "res://img/美食图片/成都担担面.png"
+          },
+          "urban_district": "青羊区"
+        },
+        {
+          "name": "龙抄手",
+          "district": "锦江",
+          "description": "成都特色风味：龙抄手。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.75,
+            0.72
+          ],
+          "image": {
+            "path": "res://img/美食图片/成都龙抄手.png"
+          },
+          "urban_district": "锦江区"
+        }
+      ],
+      "tagline": "锦里藏闲趣，火锅煮烟火。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    },
+    {
+      "id": "chongqing",
+      "name": "重庆",
+      "enabled": true,
+      "landmark": "洪崖洞",
+      "cover_image": {
+        "path": "res://img/城市封面图/重庆城市封面图.png"
+      },
+      "flat_map_image": {
+        "path": "res://img/城市美食地图/重庆城市美食地图.png"
+      },
+      "map_status": "已绘制",
+      "food_atlas_index": 2,
+      "center_lat": 29.56,
+      "center_lng": 106.55,
+      "foods": [
+        {
+          "name": "重庆小面",
+          "district": "解放碑",
+          "description": "麻辣鲜香，清晨一碗",
+          "map_position": [
+            0.22,
+            0.24
+          ],
+          "image": {
+            "path": "res://img/美食图片/重庆重庆小面.png"
+          },
+          "urban_district": "渝中区"
+        },
+        {
+          "name": "老火锅",
+          "district": "洪崖洞",
+          "description": "牛油厚味，九宫格",
+          "map_position": [
+            0.18,
+            0.62
+          ],
+          "image": {
+            "path": "res://img/美食图片/重庆老火锅.png"
+          },
+          "urban_district": "渝中区"
+        },
+        {
+          "name": "酸辣粉",
+          "district": "磁器口",
+          "description": "酸辣开胃，红薯粉爽滑",
+          "map_position": [
+            0.75,
+            0.32
+          ],
+          "image": {
+            "path": "res://img/美食图片/重庆酸辣粉.png"
+          },
+          "urban_district": "沙坪坝区"
+        },
+        {
+          "name": "辣子鸡",
+          "district": "歌乐山",
+          "description": "重庆特色风味：辣子鸡。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.75,
+            0.72
+          ],
+          "image": {
+            "path": "res://img/美食图片/重庆辣子鸡.png"
+          },
+          "urban_district": "沙坪坝区"
+        }
+      ],
+      "tagline": "山城灯万盏，小面辣千回。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    },
+    {
+      "id": "guangzhou",
+      "name": "广州",
+      "enabled": true,
+      "landmark": "广州塔",
+      "cover_image": {
+        "path": "res://img/城市封面图/广州城市封面图.png"
+      },
+      "flat_map_image": {
+        "path": "res://img/城市美食地图/广州城市美食地图.png"
+      },
+      "map_status": "已绘制",
+      "food_atlas_index": 3,
+      "center_lat": 23.13,
+      "center_lng": 113.26,
+      "foods": [
+        {
+          "name": "早茶",
+          "district": "上下九",
+          "description": "一盅两件，慢享晨光",
+          "map_position": [
+            0.22,
+            0.24
+          ],
+          "image": {
+            "path": "res://img/美食图片/广州早茶.png"
+          },
+          "urban_district": "荔湾区"
+        },
+        {
+          "name": "烧腊",
+          "district": "北京路",
+          "description": "油亮甘香，斩件拼盘",
+          "map_position": [
+            0.18,
+            0.62
+          ],
+          "image": {
+            "path": "res://img/美食图片/广州烧腊.png"
+          },
+          "urban_district": "越秀区"
+        },
+        {
+          "name": "肠粉",
+          "district": "西关",
+          "description": "米浆滑爽，酱油点睛",
+          "map_position": [
+            0.75,
+            0.32
+          ],
+          "image": {
+            "path": "res://img/美食图片/广州肠粉.png"
+          },
+          "urban_district": "荔湾区"
+        },
+        {
+          "name": "艇仔粥",
+          "district": "荔湾",
+          "description": "广州特色风味：艇仔粥。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.75,
+            0.72
+          ],
+          "image": {
+            "path": "res://img/美食图片/广州艇仔粥.png"
+          },
+          "urban_district": "荔湾区"
+        }
+      ],
+      "tagline": "羊城花正好，早茶慢时光。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    },
+    {
+      "id": "quanzhou",
+      "name": "泉州",
+      "enabled": true,
+      "landmark": "开元寺双塔",
+      "cover_image": {
+        "path": "res://img/城市封面图/泉州城市封面图.png"
+      },
+      "flat_map_image": {
+        "path": "res://img/城市美食地图/泉州城市美食地图.png"
+      },
+      "map_status": "已绘制",
+      "food_atlas_index": -1,
+      "center_lat": 24.91,
+      "center_lng": 118.59,
+      "foods": [
+        {
+          "name": "面线糊",
+          "district": "城市特色",
+          "description": "泉州特色风味：面线糊。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "urban_district": "鲤城区"
+        },
+        {
+          "name": "肉粽",
+          "district": "城市特色",
+          "description": "泉州特色风味：肉粽。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "urban_district": "鲤城区"
+        },
+        {
+          "name": "姜母鸭",
+          "district": "城市特色",
+          "description": "泉州特色风味：姜母鸭。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "urban_district": "鲤城区"
+        },
+        {
+          "name": "土笋冻",
+          "district": "城市特色",
+          "description": "泉州特色风味：土笋冻。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "urban_district": ""
+        }
+      ],
+      "tagline": "双塔听海韵，面线暖古城。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    },
+    {
+      "id": "beijing",
+      "name": "北京",
+      "enabled": true,
+      "landmark": "天坛",
+      "cover_image": {
+        "path": "res://img/城市封面图/北京城市封面图.png"
+      },
+      "flat_map_image": {},
+      "map_status": "待绘制",
+      "food_atlas_index": -1,
+      "center_lat": 39.9,
+      "center_lng": 116.4,
+      "foods": [
+        {
+          "name": "北京烤鸭",
+          "district": "城市特色",
+          "description": "北京特色风味：北京烤鸭。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "image_review": {
+            "name": "北京烤鸭",
+            "path": "res://img/美食图片/待审核/北京烤鸭.png",
+            "status": "待审核",
+            "version": 1
+          },
+          "urban_district": ""
+        },
+        {
+          "name": "炸酱面",
+          "district": "城市特色",
+          "description": "北京特色风味：炸酱面。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "image_review": {
+            "name": "北京炸酱面",
+            "path": "res://img/美食图片/待审核/北京炸酱面.png",
+            "status": "待审核",
+            "version": 1
+          },
+          "urban_district": ""
+        },
+        {
+          "name": "涮羊肉",
+          "district": "城市特色",
+          "description": "北京特色风味：涮羊肉。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "image_review": {
+            "name": "北京涮羊肉",
+            "path": "res://img/美食图片/待审核/北京涮羊肉.png",
+            "status": "待审核",
+            "version": 1
+          },
+          "urban_district": ""
+        },
+        {
+          "name": "驴打滚",
+          "district": "城市特色",
+          "description": "北京特色风味：驴打滚。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "image_review": {
+            "name": "北京驴打滚",
+            "path": "res://img/美食图片/待审核/北京驴打滚.png",
+            "status": "待审核",
+            "version": 1
+          },
+          "urban_district": ""
+        }
+      ],
+      "tagline": "天坛承古韵，烤鸭识京味。",
+      "map_review": {
+        "name": "北京城市美食地图",
+        "path": "res://img/城市美食地图/待审核/北京城市美食地图.png",
+        "status": "待审核",
+        "version": 2,
+        "style": "泉州卡通风格，无大标题，无美食插图"
+      }
+    },
+    {
+      "id": "shanghai",
+      "name": "上海",
+      "enabled": true,
+      "landmark": "外滩·东方明珠",
+      "cover_image": {
+        "path": "res://img/城市封面图/上海城市封面图.png"
+      },
+      "flat_map_image": {},
+      "map_status": "待绘制",
+      "food_atlas_index": -1,
+      "center_lat": 31.23,
+      "center_lng": 121.47,
+      "foods": [
+        {
+          "name": "小笼包",
+          "district": "城市特色",
+          "description": "上海特色风味：小笼包。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "image_review": {
+            "name": "上海小笼包",
+            "path": "res://img/美食图片/待审核/上海小笼包.png",
+            "status": "待审核",
+            "version": 1
+          },
+          "urban_district": ""
+        },
+        {
+          "name": "生煎包",
+          "district": "城市特色",
+          "description": "上海特色风味：生煎包。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "image_review": {
+            "name": "上海生煎包",
+            "path": "res://img/美食图片/待审核/上海生煎包.png",
+            "status": "待审核",
+            "version": 1
+          },
+          "urban_district": ""
+        },
+        {
+          "name": "葱油拌面",
+          "district": "城市特色",
+          "description": "上海特色风味：葱油拌面。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "image_review": {
+            "name": "上海葱油拌面",
+            "path": "res://img/美食图片/待审核/上海葱油拌面.png",
+            "status": "待审核",
+            "version": 1
+          },
+          "urban_district": ""
+        },
+        {
+          "name": "排骨年糕",
+          "district": "城市特色",
+          "description": "上海特色风味：排骨年糕。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "image_review": {
+            "name": "上海排骨年糕",
+            "path": "res://img/美食图片/待审核/上海排骨年糕.png",
+            "status": "待审核",
+            "version": 1
+          },
+          "urban_district": ""
+        }
+      ],
+      "tagline": "外滩映灯火，生煎裹鲜香。",
+      "map_review": {
+        "name": "上海城市美食地图",
+        "path": "res://img/城市美食地图/待审核/上海城市美食地图.png",
+        "status": "待审核",
+        "version": 2,
+        "style": "泉州卡通风格，无大标题，无美食插图"
+      }
+    },
+    {
+      "id": "xian",
+      "name": "西安",
+      "enabled": true,
+      "landmark": "大雁塔·城墙",
+      "cover_image": {
+        "path": "res://img/城市封面图/西安城市封面图.png"
+      },
+      "flat_map_image": {},
+      "map_status": "待绘制",
+      "food_atlas_index": -1,
+      "center_lat": 34.26,
+      "center_lng": 108.94,
+      "foods": [
+        {
+          "name": "肉夹馍",
+          "district": "城市特色",
+          "description": "西安特色风味：肉夹馍。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "image_review": {
+            "name": "西安肉夹馍",
+            "path": "res://img/美食图片/待审核/西安肉夹馍.png",
+            "status": "待审核",
+            "version": 1
+          },
+          "urban_district": ""
+        },
+        {
+          "name": "羊肉泡馍",
+          "district": "城市特色",
+          "description": "西安特色风味：羊肉泡馍。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "image_review": {
+            "name": "西安羊肉泡馍",
+            "path": "res://img/美食图片/待审核/西安羊肉泡馍.png",
+            "status": "待审核",
+            "version": 1
+          },
+          "urban_district": ""
+        },
+        {
+          "name": "凉皮",
+          "district": "城市特色",
+          "description": "西安特色风味：凉皮。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "image_review": {
+            "name": "西安凉皮",
+            "path": "res://img/美食图片/待审核/西安凉皮.png",
+            "status": "待审核",
+            "version": 1
+          },
+          "urban_district": ""
+        },
+        {
+          "name": "油泼面",
+          "district": "城市特色",
+          "description": "西安特色风味：油泼面。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "image_review": {
+            "name": "西安油泼面",
+            "path": "res://img/美食图片/待审核/西安油泼面.png",
+            "status": "待审核",
+            "version": 1
+          },
+          "urban_district": ""
+        }
+      ],
+      "tagline": "雁塔承唐韵，泡馍品长安。",
+      "map_review": {
+        "name": "西安城市美食地图",
+        "path": "res://img/城市美食地图/待审核/西安城市美食地图.png",
+        "status": "待审核",
+        "version": 2,
+        "style": "泉州卡通风格，无大标题，无美食插图"
+      }
+    },
+    {
+      "id": "hangzhou",
+      "name": "杭州",
+      "enabled": true,
+      "landmark": "西湖·雷峰塔",
+      "cover_image": {
+        "path": "res://img/城市封面图/杭州城市封面图.png"
+      },
+      "flat_map_image": {},
+      "map_status": "待绘制",
+      "food_atlas_index": -1,
+      "center_lat": 30.25,
+      "center_lng": 120.15,
+      "foods": [
+        {
+          "name": "东坡肉",
+          "district": "城市特色",
+          "description": "杭州特色风味：东坡肉。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "image_review": {
+            "name": "杭州东坡肉",
+            "path": "res://img/美食图片/待审核/杭州东坡肉.png",
+            "status": "待审核",
+            "version": 1
+          },
+          "urban_district": ""
+        },
+        {
+          "name": "西湖醋鱼",
+          "district": "城市特色",
+          "description": "杭州特色风味：西湖醋鱼。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "image_review": {
+            "name": "杭州西湖醋鱼",
+            "path": "res://img/美食图片/待审核/杭州西湖醋鱼.png",
+            "status": "待审核",
+            "version": 1
+          },
+          "urban_district": ""
+        },
+        {
+          "name": "龙井虾仁",
+          "district": "城市特色",
+          "description": "杭州特色风味：龙井虾仁。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "image_review": {
+            "name": "杭州龙井虾仁",
+            "path": "res://img/美食图片/待审核/杭州龙井虾仁.png",
+            "status": "待审核",
+            "version": 1
+          },
+          "urban_district": ""
+        },
+        {
+          "name": "片儿川",
+          "district": "城市特色",
+          "description": "杭州特色风味：片儿川。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "image_review": {
+            "name": "杭州片儿川",
+            "path": "res://img/美食图片/待审核/杭州片儿川.png",
+            "status": "待审核",
+            "version": 1
+          },
+          "urban_district": ""
+        }
+      ],
+      "tagline": "西湖盈烟雨，龙井入鲜香。",
+      "map_review": {
+        "name": "杭州城市美食地图",
+        "path": "res://img/城市美食地图/待审核/杭州城市美食地图.png",
+        "status": "待审核",
+        "version": 2,
+        "style": "泉州卡通风格，无大标题，无美食插图"
+      }
+    },
+    {
+      "id": "suzhou",
+      "name": "苏州",
+      "enabled": true,
+      "landmark": "古典园林",
+      "cover_image": {
+        "path": "res://img/城市封面图/苏州城市封面图.png"
+      },
+      "flat_map_image": {},
+      "map_status": "待绘制",
+      "food_atlas_index": -1,
+      "center_lat": 31.3,
+      "center_lng": 120.58,
+      "foods": [
+        {
+          "name": "苏式汤面",
+          "district": "城市特色",
+          "description": "苏州特色风味：苏式汤面。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "松鼠鳜鱼",
+          "district": "城市特色",
+          "description": "苏州特色风味：松鼠鳜鱼。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "生煎",
+          "district": "城市特色",
+          "description": "苏州特色风味：生煎。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "桂花糖粥",
+          "district": "城市特色",
+          "description": "苏州特色风味：桂花糖粥。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "urban_district": ""
+        }
+      ],
+      "tagline": "园林藏雅趣，汤面见江南。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    },
+    {
+      "id": "nanjing",
+      "name": "南京",
+      "enabled": true,
+      "landmark": "夫子庙·秦淮河",
+      "cover_image": {
+        "path": "res://img/城市封面图/南京城市封面图.png"
+      },
+      "flat_map_image": {},
+      "map_status": "待绘制",
+      "food_atlas_index": -1,
+      "center_lat": 32.06,
+      "center_lng": 118.8,
+      "foods": [
+        {
+          "name": "盐水鸭",
+          "district": "城市特色",
+          "description": "南京特色风味：盐水鸭。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "鸭血粉丝汤",
+          "district": "城市特色",
+          "description": "南京特色风味：鸭血粉丝汤。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "牛肉锅贴",
+          "district": "城市特色",
+          "description": "南京特色风味：牛肉锅贴。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "桂花糖芋苗",
+          "district": "城市特色",
+          "description": "南京特色风味：桂花糖芋苗。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "urban_district": ""
+        }
+      ],
+      "tagline": "秦淮流古韵，盐鸭醉金陵。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    },
+    {
+      "id": "wuhan",
+      "name": "武汉",
+      "enabled": true,
+      "landmark": "黄鹤楼",
+      "cover_image": {
+        "path": "res://img/城市封面图/武汉城市封面图.png"
+      },
+      "flat_map_image": {},
+      "map_status": "待绘制",
+      "food_atlas_index": -1,
+      "center_lat": 30.59,
+      "center_lng": 114.3,
+      "foods": [
+        {
+          "name": "热干面",
+          "district": "城市特色",
+          "description": "武汉特色风味：热干面。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "豆皮",
+          "district": "城市特色",
+          "description": "武汉特色风味：豆皮。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "面窝",
+          "district": "城市特色",
+          "description": "武汉特色风味：面窝。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "排骨藕汤",
+          "district": "城市特色",
+          "description": "武汉特色风味：排骨藕汤。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "urban_district": ""
+        }
+      ],
+      "tagline": "黄鹤临江立，热干面正香。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    },
+    {
+      "id": "changsha",
+      "name": "长沙",
+      "enabled": true,
+      "landmark": "橘子洲",
+      "cover_image": {
+        "path": "res://img/城市封面图/长沙城市封面图.png"
+      },
+      "flat_map_image": {},
+      "map_status": "待绘制",
+      "food_atlas_index": -1,
+      "center_lat": 28.23,
+      "center_lng": 112.94,
+      "foods": [
+        {
+          "name": "臭豆腐",
+          "district": "城市特色",
+          "description": "长沙特色风味：臭豆腐。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "糖油粑粑",
+          "district": "城市特色",
+          "description": "长沙特色风味：糖油粑粑。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "口味虾",
+          "district": "城市特色",
+          "description": "长沙特色风味：口味虾。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "长沙米粉",
+          "district": "城市特色",
+          "description": "长沙特色风味：长沙米粉。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "urban_district": ""
+        }
+      ],
+      "tagline": "橘洲迎晚照，米粉唤清晨。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    },
+    {
+      "id": "zhangjiajie",
+      "name": "张家界",
+      "enabled": true,
+      "landmark": "武陵源峰林",
+      "cover_image": {
+        "path": "res://img/城市封面图/张家界城市封面图.png"
+      },
+      "flat_map_image": {},
+      "map_status": "待绘制",
+      "food_atlas_index": -1,
+      "center_lat": 29.12,
+      "center_lng": 110.48,
+      "foods": [
+        {
+          "name": "三下锅",
+          "district": "城市特色",
+          "description": "张家界特色风味：三下锅。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "葛根粉",
+          "district": "城市特色",
+          "description": "张家界特色风味：葛根粉。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "腊肉",
+          "district": "城市特色",
+          "description": "张家界特色风味：腊肉。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "土家扣肉",
+          "district": "城市特色",
+          "description": "张家界特色风味：土家扣肉。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "urban_district": ""
+        }
+      ],
+      "tagline": "奇峰穿云起，土家煨锅香。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    },
+    {
+      "id": "guilin",
+      "name": "桂林",
+      "enabled": true,
+      "landmark": "漓江山水",
+      "cover_image": {
+        "path": "res://img/城市封面图/桂林城市封面图.png"
+      },
+      "flat_map_image": {},
+      "map_status": "待绘制",
+      "food_atlas_index": -1,
+      "center_lat": 25.27,
+      "center_lng": 110.29,
+      "foods": [
+        {
+          "name": "桂林米粉",
+          "district": "城市特色",
+          "description": "桂林特色风味：桂林米粉。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "啤酒鱼",
+          "district": "城市特色",
+          "description": "桂林特色风味：啤酒鱼。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "荔浦芋扣肉",
+          "district": "城市特色",
+          "description": "桂林特色风味：荔浦芋扣肉。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "油茶",
+          "district": "城市特色",
+          "description": "桂林特色风味：油茶。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "urban_district": ""
+        }
+      ],
+      "tagline": "漓江浮碧影，米粉绕乡情。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    },
+    {
+      "id": "xiamen",
+      "name": "厦门",
+      "enabled": true,
+      "landmark": "鼓浪屿",
+      "cover_image": {
+        "path": "res://img/城市封面图/厦门城市封面图.png"
+      },
+      "flat_map_image": {},
+      "map_status": "待绘制",
+      "food_atlas_index": -1,
+      "center_lat": 24.48,
+      "center_lng": 118.08,
+      "foods": [
+        {
+          "name": "沙茶面",
+          "district": "城市特色",
+          "description": "厦门特色风味：沙茶面。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "海蛎煎",
+          "district": "城市特色",
+          "description": "厦门特色风味：海蛎煎。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "花生汤",
+          "district": "城市特色",
+          "description": "厦门特色风味：花生汤。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "烧肉粽",
+          "district": "城市特色",
+          "description": "厦门特色风味：烧肉粽。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "urban_district": ""
+        }
+      ],
+      "tagline": "鹭岛听潮起，沙茶满巷香。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    },
+    {
+      "id": "fuzhou",
+      "name": "福州",
+      "enabled": true,
+      "landmark": "三坊七巷",
+      "cover_image": {
+        "path": "res://img/城市封面图/福州城市封面图.png"
+      },
+      "flat_map_image": {},
+      "map_status": "待绘制",
+      "food_atlas_index": -1,
+      "center_lat": 26.08,
+      "center_lng": 119.3,
+      "foods": [
+        {
+          "name": "鱼丸",
+          "district": "城市特色",
+          "description": "福州特色风味：鱼丸。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "肉燕",
+          "district": "城市特色",
+          "description": "福州特色风味：肉燕。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "锅边糊",
+          "district": "城市特色",
+          "description": "福州特色风味：锅边糊。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "佛跳墙",
+          "district": "城市特色",
+          "description": "福州特色风味：佛跳墙。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "urban_district": ""
+        }
+      ],
+      "tagline": "坊巷留古意，鱼丸藏鲜心。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    },
+    {
+      "id": "qingdao",
+      "name": "青岛",
+      "enabled": true,
+      "landmark": "栈桥",
+      "cover_image": {
+        "path": "res://img/城市封面图/青岛城市封面图.png"
+      },
+      "flat_map_image": {},
+      "map_status": "待绘制",
+      "food_atlas_index": -1,
+      "center_lat": 36.07,
+      "center_lng": 120.38,
+      "foods": [
+        {
+          "name": "鲅鱼水饺",
+          "district": "城市特色",
+          "description": "青岛特色风味：鲅鱼水饺。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "辣炒蛤蜊",
+          "district": "城市特色",
+          "description": "青岛特色风味：辣炒蛤蜊。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "海鲜面",
+          "district": "城市特色",
+          "description": "青岛特色风味：海鲜面。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "排骨米饭",
+          "district": "城市特色",
+          "description": "青岛特色风味：排骨米饭。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "urban_district": ""
+        }
+      ],
+      "tagline": "红瓦迎碧海，蛤蜊佐晚风。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    },
+    {
+      "id": "dalian",
+      "name": "大连",
+      "enabled": true,
+      "landmark": "星海广场",
+      "cover_image": {
+        "path": "res://img/城市封面图/大连城市封面图.png"
+      },
+      "flat_map_image": {},
+      "map_status": "待绘制",
+      "food_atlas_index": -1,
+      "center_lat": 38.91,
+      "center_lng": 121.61,
+      "foods": [
+        {
+          "name": "大连焖子",
+          "district": "城市特色",
+          "description": "大连特色风味：大连焖子。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "海菜包子",
+          "district": "城市特色",
+          "description": "大连特色风味：海菜包子。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "鲅鱼饺子",
+          "district": "城市特色",
+          "description": "大连特色风味：鲅鱼饺子。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "海鲜锅",
+          "district": "城市特色",
+          "description": "大连特色风味：海鲜锅。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "urban_district": ""
+        }
+      ],
+      "tagline": "星海连天碧，焖子伴街香。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    },
+    {
+      "id": "harbin",
+      "name": "哈尔滨",
+      "enabled": true,
+      "landmark": "圣索菲亚教堂",
+      "cover_image": {
+        "path": "res://img/城市封面图/哈尔滨城市封面图.png"
+      },
+      "flat_map_image": {},
+      "map_status": "待绘制",
+      "food_atlas_index": -1,
+      "center_lat": 45.76,
+      "center_lng": 126.63,
+      "foods": [
+        {
+          "name": "红肠",
+          "district": "城市特色",
+          "description": "哈尔滨特色风味：红肠。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "锅包肉",
+          "district": "城市特色",
+          "description": "哈尔滨特色风味：锅包肉。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "俄式大列巴",
+          "district": "城市特色",
+          "description": "哈尔滨特色风味：俄式大列巴。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "铁锅炖",
+          "district": "城市特色",
+          "description": "哈尔滨特色风味：铁锅炖。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "urban_district": ""
+        }
+      ],
+      "tagline": "穹顶凝霜雪，红肠暖北国。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    },
+    {
+      "id": "kunming",
+      "name": "昆明",
+      "enabled": true,
+      "landmark": "翠湖",
+      "cover_image": {
+        "path": "res://img/城市封面图/昆明城市封面图.png"
+      },
+      "flat_map_image": {},
+      "map_status": "待绘制",
+      "food_atlas_index": -1,
+      "center_lat": 25.04,
+      "center_lng": 102.71,
+      "foods": [
+        {
+          "name": "过桥米线",
+          "district": "城市特色",
+          "description": "昆明特色风味：过桥米线。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "汽锅鸡",
+          "district": "城市特色",
+          "description": "昆明特色风味：汽锅鸡。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "小锅米线",
+          "district": "城市特色",
+          "description": "昆明特色风味：小锅米线。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "鲜花饼",
+          "district": "城市特色",
+          "description": "昆明特色风味：鲜花饼。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "urban_district": ""
+        }
+      ],
+      "tagline": "翠湖飞鸥影，米线串春城。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    },
+    {
+      "id": "dali",
+      "name": "大理",
+      "enabled": true,
+      "landmark": "崇圣寺三塔",
+      "cover_image": {
+        "path": "res://img/城市封面图/大理城市封面图.png"
+      },
+      "flat_map_image": {},
+      "map_status": "待绘制",
+      "food_atlas_index": -1,
+      "center_lat": 25.61,
+      "center_lng": 100.27,
+      "foods": [
+        {
+          "name": "饵丝",
+          "district": "城市特色",
+          "description": "大理特色风味：饵丝。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "乳扇",
+          "district": "城市特色",
+          "description": "大理特色风味：乳扇。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "砂锅鱼",
+          "district": "城市特色",
+          "description": "大理特色风味：砂锅鱼。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "喜洲粑粑",
+          "district": "城市特色",
+          "description": "大理特色风味：喜洲粑粑。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "urban_district": ""
+        }
+      ],
+      "tagline": "三塔映苍洱，乳扇卷清甜。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    },
+    {
+      "id": "lijiang",
+      "name": "丽江",
+      "enabled": true,
+      "landmark": "古城·玉龙雪山",
+      "cover_image": {
+        "path": "res://img/城市封面图/丽江城市封面图.png"
+      },
+      "flat_map_image": {},
+      "map_status": "待绘制",
+      "food_atlas_index": -1,
+      "center_lat": 26.87,
+      "center_lng": 100.23,
+      "foods": [
+        {
+          "name": "腊排骨",
+          "district": "城市特色",
+          "description": "丽江特色风味：腊排骨。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "鸡豆凉粉",
+          "district": "城市特色",
+          "description": "丽江特色风味：鸡豆凉粉。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "丽江粑粑",
+          "district": "城市特色",
+          "description": "丽江特色风味：丽江粑粑。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "纳西烤肉",
+          "district": "城市特色",
+          "description": "丽江特色风味：纳西烤肉。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "urban_district": ""
+        }
+      ],
+      "tagline": "雪山望古巷，腊香入暖锅。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    },
+    {
+      "id": "sanya",
+      "name": "三亚",
+      "enabled": true,
+      "landmark": "椰林海湾",
+      "cover_image": {
+        "path": "res://img/城市封面图/三亚城市封面图.png"
+      },
+      "flat_map_image": {},
+      "map_status": "待绘制",
+      "food_atlas_index": -1,
+      "center_lat": 18.25,
+      "center_lng": 109.51,
+      "foods": [
+        {
+          "name": "椰子鸡",
+          "district": "城市特色",
+          "description": "三亚特色风味：椰子鸡。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "抱罗粉",
+          "district": "城市特色",
+          "description": "三亚特色风味：抱罗粉。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "清补凉",
+          "district": "城市特色",
+          "description": "三亚特色风味：清补凉。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "海鲜糟粕醋",
+          "district": "城市特色",
+          "description": "三亚特色风味：海鲜糟粕醋。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "urban_district": ""
+        }
+      ],
+      "tagline": "椰风拂碧浪，清补凉入心。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    },
+    {
+      "id": "luoyang",
+      "name": "洛阳",
+      "enabled": true,
+      "landmark": "龙门石窟",
+      "cover_image": {
+        "path": "res://img/城市封面图/洛阳城市封面图.png"
+      },
+      "flat_map_image": {},
+      "map_status": "待绘制",
+      "food_atlas_index": -1,
+      "center_lat": 34.62,
+      "center_lng": 112.45,
+      "foods": [
+        {
+          "name": "洛阳水席",
+          "district": "城市特色",
+          "description": "洛阳特色风味：洛阳水席。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.6,
+            0.54
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "牛肉汤",
+          "district": "城市特色",
+          "description": "洛阳特色风味：牛肉汤。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.5,
+            0.49
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "不翻汤",
+          "district": "城市特色",
+          "description": "洛阳特色风味：不翻汤。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.68,
+            0.63
+          ],
+          "urban_district": ""
+        },
+        {
+          "name": "浆面条",
+          "district": "城市特色",
+          "description": "洛阳特色风味：浆面条。在城市街巷慢慢探索当地滋味。",
+          "map_position": [
+            0.52,
+            0.76
+          ],
+          "urban_district": ""
+        }
+      ],
+      "tagline": "龙门镌千载，水席品洛城。",
+      "map_review": {
+        "status": "未排入本批审核"
+      }
+    }
+  ]
+}

@@ -6,3 +6,5 @@ extends Resource
 @export var name: String = ""          # 美食名称，如「火锅」
 @export var district: String = ""       # 地区标签，如「春熙路」
 @export var emoji: String = "🍜"
+@export var image_texture: Texture2D
+@export var urban_district: String = ""

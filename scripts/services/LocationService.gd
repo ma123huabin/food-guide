@@ -143,3 +143,6 @@ func _inside_ring(point: Vector2, ring: Array) -> bool:
 func haversine_km(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
 	var a: float = pow(sin(deg_to_rad(lat2 - lat1) / 2), 2) + cos(deg_to_rad(lat1)) * cos(deg_to_rad(lat2)) * pow(sin(deg_to_rad(lng2 - lng1) / 2), 2)
 	return 6371.0 * 2.0 * atan2(sqrt(clampf(a, 0, 1)), sqrt(clampf(1 - a, 0, 1)))
+
+func has_boundary(city_id: String) -> bool:
+	return _boundaries.has(city_id)

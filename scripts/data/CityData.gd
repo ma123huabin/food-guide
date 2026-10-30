@@ -8,10 +8,13 @@ extends Resource
 
 @export var city_id: String = ""
 @export var display_name: String = ""
+@export var tagline: String = ""
 @export var emoji: String = "🏙️"
 @export var theme_color: Color = Color("#F5A623")
 @export var locked: bool = false
+@export var cover_texture: Texture2D
 @export var map_texture: Texture2D
+@export var food_atlas_index: int = -1
 @export var center_lat: float = 30.69      # 城市中心纬度（用于定位判定）
 @export var center_lng: float = 111.29     # 城市中心经度
 @export var radius_km: float = 25.0        # 判定「在市内」的半径
