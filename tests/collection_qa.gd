@@ -43,7 +43,8 @@ func run() -> void:
 	check(gd.get_city("quanzhou").cover_texture != gd.get_city("quanzhou").map_texture, "Quanzhou cover and map are separate assets")
 	check(home._thumbs.size() == 7, "fresh collection has seven locked slots")
 	for card in home._thumbs:
-		check(card.disabled and card.find_children("*", "TextureRect", true, false).is_empty(), "locked slot reveals no city image")
+		var images: Array[Node] = card.find_children("*", "TextureRect", true, false)
+		check(card.disabled and images.size() == 1 and images[0].texture is AtlasTexture and images[0].texture.atlas.resource_path == "res://img/界面皮肤/待解锁参考.png", "locked slot uses shared default instead of city cover")
 	await capture("collection-empty.png")
 	home._draw_city()
 	await create_timer(3.65).timeout
@@ -54,7 +55,10 @@ func run() -> void:
 	await capture("collection-drop.png")
 	await create_timer(1.0).timeout
 	check(not home._busy and gd.lit_count() == 1 and not home._thumbs[0].disabled, "landing lights one thumbnail")
-	check(home._thumbs[0].find_children("*", "TextureRect", true, false).size() == 1, "collected thumbnail shows city cover")
+	var has_cover := false
+	for image in home._thumbs[0].find_children("*", "TextureRect", true, false):
+		if image.texture == gd.get_city(winner_id).cover_texture: has_cover = true
+	check(has_cover, "collected thumbnail shows its actual city cover")
 	check(home._draw_pool.size() == 24, "collected city leaves big-card draw pool")
 	var winner_present := false
 	for card in home._cards:

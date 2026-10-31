@@ -367,8 +367,10 @@
       "cover_image": {
         "path": "res://img/城市封面图/北京城市封面图.png"
       },
-      "flat_map_image": {},
-      "map_status": "待绘制",
+      "flat_map_image": {
+        "path": "res://img/城市美食地图/北京城市美食地图.png"
+      },
+      "map_status": "已绘制",
       "food_atlas_index": -1,
       "center_lat": 39.9,
       "center_lng": 116.4,
@@ -442,7 +444,7 @@
       "map_review": {
         "name": "北京城市美食地图",
         "path": "res://img/城市美食地图/待审核/北京城市美食地图.png",
-        "status": "待审核",
+        "status": "已启用（用户要求替换最新版）",
         "version": 2,
         "style": "泉州卡通风格，无大标题，无美食插图"
       }
@@ -455,8 +457,10 @@
       "cover_image": {
         "path": "res://img/城市封面图/上海城市封面图.png"
       },
-      "flat_map_image": {},
-      "map_status": "待绘制",
+      "flat_map_image": {
+        "path": "res://img/城市美食地图/上海城市美食地图.png"
+      },
+      "map_status": "已绘制",
       "food_atlas_index": -1,
       "center_lat": 31.23,
       "center_lng": 121.47,
@@ -530,7 +534,7 @@
       "map_review": {
         "name": "上海城市美食地图",
         "path": "res://img/城市美食地图/待审核/上海城市美食地图.png",
-        "status": "待审核",
+        "status": "已启用（用户要求替换最新版）",
         "version": 2,
         "style": "泉州卡通风格，无大标题，无美食插图"
       }
@@ -543,8 +547,10 @@
       "cover_image": {
         "path": "res://img/城市封面图/西安城市封面图.png"
       },
-      "flat_map_image": {},
-      "map_status": "待绘制",
+      "flat_map_image": {
+        "path": "res://img/城市美食地图/西安城市美食地图.png"
+      },
+      "map_status": "已绘制",
       "food_atlas_index": -1,
       "center_lat": 34.26,
       "center_lng": 108.94,
@@ -618,7 +624,7 @@
       "map_review": {
         "name": "西安城市美食地图",
         "path": "res://img/城市美食地图/待审核/西安城市美食地图.png",
-        "status": "待审核",
+        "status": "已启用（用户要求替换最新版）",
         "version": 2,
         "style": "泉州卡通风格，无大标题，无美食插图"
       }
@@ -631,8 +637,10 @@
       "cover_image": {
         "path": "res://img/城市封面图/杭州城市封面图.png"
       },
-      "flat_map_image": {},
-      "map_status": "待绘制",
+      "flat_map_image": {
+        "path": "res://img/城市美食地图/杭州城市美食地图.png"
+      },
+      "map_status": "已绘制",
       "food_atlas_index": -1,
       "center_lat": 30.25,
       "center_lng": 120.15,
@@ -706,7 +714,7 @@
       "map_review": {
         "name": "杭州城市美食地图",
         "path": "res://img/城市美食地图/待审核/杭州城市美食地图.png",
-        "status": "待审核",
+        "status": "已启用（用户要求替换最新版）",
         "version": 2,
         "style": "泉州卡通风格，无大标题，无美食插图"
       }

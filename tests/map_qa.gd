@@ -24,7 +24,7 @@ func run() -> void:
 		main.detail.load_city(id)
 		await process_frame
 		var view: MapViewport = main.detail._map_view
-		check(view.size == main.size and covered(view), id + " map covers full phone viewport")
+		check(view.size == Vector2(main.size.x, 748) and covered(view), id + " map covers its clipped page area")
 		var tray: Control = main.detail._dynamic.get_node("FoodTray")
 		check(tray.position == Vector2(18, 550) and main.detail._check_button.position == Vector2(28, 756), "overlay positions remain fixed")
 		for factor in [1.5, 2.0, 100.0, 0.02]:

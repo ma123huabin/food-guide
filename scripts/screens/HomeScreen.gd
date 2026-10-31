@@ -42,12 +42,17 @@ var _tween: Tween
 
 func _ready() -> void:
 	GuideUI.background(self)
-	var h1 := GuideUI.label(self, "一城一味，", Rect2(0, 68, 480, 68), 52, Color("b1ebff"), true)
-	var h2 := GuideUI.label(self, "今日点亮", Rect2(0, 129, 480, 76), 60, Color("a8e7fc"), true)
+	var h1 := GuideUI.label(self, "一城一味，", Rect2(0, 68, 480, 68), 52, Color("bc3b0c"), true)
+	var h2 := GuideUI.label(self, "今日点亮", Rect2(0, 129, 480, 76), 60, Color("ad210c"), true)
 	for h in [h1, h2]:
-		h.add_theme_constant_override("outline_size", 7)
-		h.add_theme_color_override("font_outline_color", Color("063043"))
-	GuideUI.label(self, "让味蕾，决定下一站。", Rect2(0, 207, 480, 25), 15, Color("a8d7e4"), true)
+		h.add_theme_font_override("font", load("res://assets/fonts/行楷.ttf"))
+		h.add_theme_constant_override("outline_size", 2)
+		h.add_theme_color_override("font_outline_color", Color("fff4dc"))
+	h1.hide()
+	h2.hide()
+	var title_art := GuideUI.picture(self, load("res://img/界面皮肤/首页艺术标题.png"), Rect2(38, 68, 404, 164))
+	title_art.name = "HomeTitleArt"
+	title_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_area = Control.new()
 	_area.position = Vector2(0, 249)
 	_area.size = Vector2(480, 350)
@@ -58,7 +63,7 @@ func _ready() -> void:
 	_track.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_area.add_child(_track)
 	_rebuild_draw_pool()
-	_hint = GuideUI.label(self, "点击「随机点亮」，开启一场美食奇遇", Rect2(0, 598, 480, 24), 14, Color("b7e7f3"), true)
+	_hint = GuideUI.label(self, "点击「随机点亮」，开启一场美食奇遇", Rect2(0, 598, 480, 24), 14, Color("80583c"), true)
 	_collection_view = Control.new()
 	_collection_view.position = Vector2(12, 637)
 	_collection_view.size = Vector2(456, 92)
@@ -238,14 +243,18 @@ func _rebuild_collection(pending_id: String = "") -> void:
 			b.pivot_offset = Vector2(30, 43)
 			if city_id.is_empty():
 				b.disabled = true
-				b.add_theme_stylebox_override("disabled", GuideUI.box(Color("d7f4fc"), 14, Color("82cce1"), 1))
-				GuideUI.label(b, "◇", Rect2(0, 4, 60, 51), 26, Color("5c96ab"), true)
-				GuideUI.label(b, "待解锁", Rect2(0, 59, 60, 21), 12, Color("507b8c"), true)
+				b.add_theme_stylebox_override("disabled", StyleBoxEmpty.new())
+				var locked := GuideUI.picture(b, GuideUI.locked_art(), Rect2(0, 0, 60, 87))
+				locked.stretch_mode = TextureRect.STRETCH_SCALE
 			else:
 				var city := GameData.get_city(city_id)
+				GuideUI.skin_frame(b, 0.045)
 				GuideUI.picture(b, city.cover_texture, Rect2(4, 4, 52, 54))
-				GuideUI.label(b, city.display_name, Rect2(0, 59, 60, 21), 13, GuideUI.INK, true)
-				b.add_theme_stylebox_override("normal", GuideUI.box(GuideUI.CREAM, 14, GuideUI.GOLD, 2))
+				GuideUI.panel(b, Rect2(4, 58, 52, 25), Color("22683f"), 5, GuideUI.GOLD, 1)
+				GuideUI.label(b, city.display_name, Rect2(1, 59, 50, 21), 13, Color("fff7df"), true)
+				GuideUI.label(b, "♥", Rect2(48, 68, 9, 12), 9, GuideUI.GOLD, true)
+				for x in [4, 49]:
+					GuideUI.label(b, "♥", Rect2(x, 55, 8, 10), 8, GuideUI.GOLD, true)
 			if copy == 0:
 				_thumbs.append(b)
 	_collection_offset = 0.0

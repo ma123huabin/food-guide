@@ -1,10 +1,10 @@
 class_name GuideUI
 extends RefCounted
 
-const INK = Color("123e50")
-const GOLD = Color("dcf37c")
-const RED = Color("087da5")
-const CREAM = Color("e9faff")
+const INK = Color("6b2615")
+const GOLD = Color("e6b54d")
+const RED = Color("b9240b")
+const CREAM = Color("fff5df")
 
 static func box(color: Color, radius: int = 18, border: Color = Color.TRANSPARENT, width: int = 0) -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
@@ -12,7 +12,7 @@ static func box(color: Color, radius: int = 18, border: Color = Color.TRANSPAREN
 	s.set_corner_radius_all(radius)
 	s.border_color = border
 	s.set_border_width_all(width)
-	s.shadow_color = Color(0.0, 0.12, 0.20, 0.25)
+	s.shadow_color = Color(0.25, 0.12, 0.03, 0.20)
 	s.shadow_size = 6
 	s.shadow_offset = Vector2(0, 4)
 	return s
@@ -34,6 +34,8 @@ static func label(parent: Node, text: String, rect: Rect2, font_size: int = 18, 
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	l.add_theme_color_override("font_color", color)
 	l.add_theme_font_size_override("font_size", font_size)
+	if font_size >= 13:
+		l.add_theme_font_override("font", load("res://assets/fonts/楷体.ttf"))
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	if centered:
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -43,19 +45,20 @@ static func label(parent: Node, text: String, rect: Rect2, font_size: int = 18, 
 static func button(parent: Node, text: String, rect: Rect2, action: Callable, primary: bool = false) -> Button:
 	var b: Button = TravelButton.new() if primary else Button.new()
 	b.text = text
+	b.add_theme_font_override("font", load("res://assets/fonts/行楷.ttf"))
 	b.position = rect.position
 	b.size = rect.size
 	b.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	b.add_theme_font_size_override("font_size", 25 if primary else 15)
-	b.add_theme_color_override("font_color", CREAM if primary else INK)
+	b.add_theme_color_override("font_color", Color("fff8e7") if primary else INK)
 	b.add_theme_color_override("font_hover_color", Color.WHITE if primary else RED)
-	b.add_theme_color_override("font_pressed_color", CREAM if primary else INK)
-	b.add_theme_stylebox_override("normal", box(RED if primary else CREAM, 30 if primary else 18, GOLD if primary else Color("86dbf2"), 3 if primary else 1))
-	b.add_theme_stylebox_override("hover", box(Color("20b4dc") if primary else Color("ceeffa"), 30 if primary else 18, GOLD, 3 if primary else 1))
-	b.add_theme_stylebox_override("pressed", box(Color("075774") if primary else Color("a8e5f6"), 30 if primary else 18, GOLD, 2))
-	b.add_theme_stylebox_override("disabled", box(Color("bdd8e3"), 30 if primary else 18, GOLD, 2))
-	b.add_theme_color_override("font_disabled_color", Color("557989"))
-	b.add_theme_stylebox_override("focus", box(Color.TRANSPARENT, 18, GOLD, 2))
+	b.add_theme_color_override("font_pressed_color", Color("fff8e7") if primary else INK)
+	b.add_theme_stylebox_override("normal", box(RED if primary else CREAM, 30 if primary else 18))
+	b.add_theme_stylebox_override("hover", box(Color("ffe6a1") if primary else Color("ffebc4"), 30 if primary else 18))
+	b.add_theme_stylebox_override("pressed", box(Color("dfad59") if primary else Color("f5dbaa"), 30 if primary else 18))
+	b.add_theme_stylebox_override("disabled", box(Color("e2d4b9"), 30 if primary else 18))
+	b.add_theme_color_override("font_disabled_color", Color("8a7a64"))
+	b.add_theme_stylebox_override("focus", box(Color.TRANSPARENT, 18))
 	b.pressed.connect(action)
 	parent.add_child(b)
 	return b
@@ -80,25 +83,22 @@ static func picture(parent: Node, texture: Texture2D, rect: Rect2) -> TextureRec
 	return t
 
 static func background(parent: Control) -> void:
-	var bg := ColorRect.new()
+	var bg := picture(parent, load("res://img/界面皮肤/首页精确背景.png"), Rect2(Vector2.ZERO, parent.size))
+	bg.name = "CulinaryBackground"
 	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var shader := Shader.new()
-	shader.code = """shader_type canvas_item;
-void fragment(){
- vec2 p = UV;
- vec3 c = mix(vec3(0.016,0.09,0.13), vec3(0.025,0.23,0.30), smoothstep(0.0,0.76,p.y));
- float glow = exp(-length((p-vec2(0.5,0.50))*vec2(2.5,3.0))*2.0);
- c += vec3(0.015,0.10,0.13)*glow;
- float edge = 0.742 + 0.004*sin(p.x*22.0) + 0.002*sin(p.x*61.0);
- float shore = smoothstep(edge-0.002,edge+0.002,p.y);
- vec3 ice = mix(vec3(0.60,0.88,0.97),vec3(0.78,0.96,1.0),p.y);
- COLOR=vec4(mix(c,ice,shore),1.0);
-}"""
-	var mat := ShaderMaterial.new()
-	mat.shader = shader
-	bg.material = mat
-	parent.add_child(bg)
+
+static func skin_frame(parent: Control, detail_scale: float = 0.10) -> ReferenceFrame:
+	var frame := ReferenceFrame.new()
+	frame.kind = "city" if parent is CityCard else ("food" if parent is Button else "tray")
+	parent.add_child(frame)
+	frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	return frame
+
+static func locked_art() -> AtlasTexture:
+	var atlas := AtlasTexture.new()
+	atlas.atlas = load("res://img/界面皮肤/待解锁参考.png")
+	atlas.region = Rect2(0, 0, atlas.atlas.get_width() / 2.0, atlas.atlas.get_height())
+	return atlas
 
 static func city_art(city: CityData) -> Texture2D:
 	return city.cover_texture
