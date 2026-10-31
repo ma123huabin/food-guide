@@ -16,3 +16,5 @@ Downloaded on 2026-10-29:
 Extraction script and source downloads are retained at `D:/软件安装位置/Codex/food-guide-build/`.
 
 Quanzhou added 2026-10-30: https://geojson.cn/api/china/1.5.1/350000.json; feature 350500, original WGS84 polygons.
+
+Hangzhou added 2026-10-31: https://geojson.cn/api/china/1.5.1/330000.json; feature 330100, original WGS84 polygons including holes. Source download: `food-guide-build/zhejiang-boundary-source.json`.

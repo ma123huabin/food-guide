@@ -2,11 +2,17 @@ class_name HomeScreen
 extends Control
 
 const STEP = 260.0
+const COLLECTION_VISIBLE = 5
+const COLLECTION_CARD = Vector2(84, 116)
+const COLLECTION_STEP = 93.0
+const COLLECTION_TOP = 624.0
+const COLLECTION_NAME_RECT = Rect2(20, 87, 44, 20)
 @export_group("首页自动轮播")
 @export var autoplay_enabled: bool = true
-@export_range(0.2, 30.0, 0.1) var autoplay_interval: float = 3.0
+@export_range(0.2, 30.0, 0.1) var autoplay_interval: float = 2.0
 @export_range(0.05, 3.0, 0.05) var autoplay_transition_duration: float = 0.45
 @export_range(0.0, 30.0, 0.5) var autoplay_resume_delay: float = 6.0
+@export_range(0.0, 30.0, 0.5) var autoplay_after_draw_delay: float = 1.0
 @export_enum("下一座:1", "上一座:-1") var autoplay_direction: int = 1
 
 @export_group("抽中强调")
@@ -23,8 +29,15 @@ var _collection_offset: float = 0.0
 var _collection_wait: float = 0.0
 var _collection_count: int = 0
 var _collection_hovered: bool = false
+var _collection_pressing: bool = false
+var _collection_dragging: bool = false
+var _collection_start: Vector2
+var _collection_start_offset: float = 0.0
 var _drop_card: CityCard
 var _drop_tween: Tween
+var _drop_origin: Vector2
+var _drop_destination: Vector2
+var _drop_scale: Vector2
 var _autoplay_remaining: float = 0.0
 var _area: Control
 var _track: Control
@@ -50,7 +63,7 @@ func _ready() -> void:
 		h.add_theme_color_override("font_outline_color", Color("fff4dc"))
 	h1.hide()
 	h2.hide()
-	var title_art := GuideUI.picture(self, load("res://img/界面皮肤/首页艺术标题.png"), Rect2(38, 68, 404, 164))
+	var title_art := GuideUI.picture(self, GuideUI.component("home_title"), Rect2(38, 68, 404, 164))
 	title_art.name = "HomeTitleArt"
 	title_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_area = Control.new()
@@ -65,8 +78,8 @@ func _ready() -> void:
 	_rebuild_draw_pool()
 	_hint = GuideUI.label(self, "点击「随机点亮」，开启一场美食奇遇", Rect2(0, 598, 480, 24), 14, Color("80583c"), true)
 	_collection_view = Control.new()
-	_collection_view.position = Vector2(12, 637)
-	_collection_view.size = Vector2(456, 92)
+	_collection_view.position = Vector2(12, COLLECTION_TOP)
+	_collection_view.size = Vector2(456, COLLECTION_CARD.y)
 	_collection_view.clip_contents = true
 	_collection_view.mouse_entered.connect(func() -> void: _collection_hovered = true)
 	_collection_view.mouse_exited.connect(func() -> void: _collection_hovered = false)
@@ -80,12 +93,12 @@ func _ready() -> void:
 	_autoplay_remaining = autoplay_interval
 
 func _process(delta: float) -> void:
-	if is_visible_in_tree() and not _busy and not _collection_hovered and _collection_count > 7:
+	if is_visible_in_tree() and not _busy and not _collection_hovered and not _collection_pressing and _collection_count > COLLECTION_VISIBLE:
 		_collection_wait -= delta
 		if _collection_wait <= 0.0:
-			_collection_offset = fposmod(_collection_offset + collection_scroll_speed * delta, _collection_count * 66.0)
+			_collection_offset = fposmod(_collection_offset + collection_scroll_speed * delta, _collection_count * COLLECTION_STEP)
 			_collection_track.position.x = -_collection_offset
-	if not autoplay_enabled or not is_visible_in_tree() or _busy or _pressing or _draw_pool.size() < 2:
+	if not autoplay_enabled or not is_visible_in_tree() or _busy or _draw_pool.size() < 2:
 		return
 	if _tween and _tween.is_running():
 		return
@@ -108,6 +121,8 @@ func _advance_carousel() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_VISIBILITY_CHANGED and is_node_ready():
 		_pressing = false
+		_collection_pressing = false
+		_collection_dragging = false
 		_autoplay_remaining = autoplay_interval
 		_collection_wait = collection_scroll_delay
 		if not _busy and _tween and _tween.is_running():
@@ -119,23 +134,48 @@ func _input_card(event: InputEvent) -> void:
 		return
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
-			_autoplay_remaining = autoplay_resume_delay
-			if _tween and _tween.is_running():
-				_tween.kill()
-				_track.position.x = 120 - _active_slot * STEP
 			_start = event.position
 			_pressing = true
 		elif _pressing:
 			_pressing = false
-			_autoplay_remaining = autoplay_resume_delay
 			var delta: float = event.position.x - _start.x
 			if absf(delta) > 35:
-				_select_thumb(posmod(_selected - (1 if delta > 0 else -1), _draw_pool.size()))
+				return
 			elif event.position.x >= 120 and event.position.x <= 360:
 				if GameData.is_lit(_draw_pool[_selected].city_id):
 					EventBus.request_open_city.emit(_draw_pool[_selected].city_id)
 				else:
 					_hint.text = "这座城市还未点亮，试试下方「随机点亮」"
+
+func _input(event: InputEvent) -> void:
+	if not is_visible_in_tree() or _busy or _collection_count <= COLLECTION_VISIBLE:
+		_collection_pressing = false
+		_collection_dragging = false
+		return
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			if _collection_view.get_global_rect().has_point(event.position):
+				_collection_pressing = true
+				_collection_dragging = false
+				_collection_start = event.position
+				_collection_start_offset = _collection_offset
+		elif _collection_pressing:
+			_collection_pressing = false
+			_collection_wait = autoplay_resume_delay
+			if _collection_dragging:
+				for child in _collection_track.get_children():
+					if child is Button:
+						child.button_pressed = false
+				get_viewport().set_input_as_handled()
+			_collection_dragging = false
+	elif event is InputEventMouseMotion and _collection_pressing:
+		var distance: float = event.position.x - _collection_start.x
+		if absf(distance) > 10.0:
+			_collection_dragging = true
+		if _collection_dragging:
+			_collection_offset = fposmod(_collection_start_offset - distance, _collection_count * COLLECTION_STEP)
+			_collection_track.position.x = -_collection_offset
+			get_viewport().set_input_as_handled()
 
 func _select_thumb(index: int) -> void:
 	if _busy:
@@ -159,9 +199,12 @@ func _draw_city() -> void:
 	_button.disabled = true
 	_button.text = "正在寻找下一站…"
 	_hint.text = "城市飞驰中，下一口心动即将揭晓…"
+	# Continue from the current visual position when autoplay is mid-transition.
+	var visual_offset := _track.position.x - (120.0 - _active_slot * STEP)
 	if _tween and _tween.is_running():
 		_tween.kill()
-	_track.position.x = 120 - (_draw_pool.size() + _selected) * STEP
+	var start_slot := _draw_pool.size() + _selected
+	_track.position.x = 120 - start_slot * STEP + visual_offset
 	var pool: Array[int] = []
 	for i in range(_draw_pool.size()):
 		if not GameData.is_lit(_draw_pool[i].city_id):
@@ -169,21 +212,36 @@ func _draw_city() -> void:
 	if pool.is_empty():
 		pool.assign(range(_draw_pool.size()))
 	_selected = pool.pick_random()
-	_active_slot = _draw_pool.size() * 5 + _selected
+	_active_slot = start_slot + _draw_pool.size() + posmod(_selected - start_slot, _draw_pool.size())
 	for card in _cards:
 		card.highlighted = false
-		card.scale = Vector2(0.9, 0.9)
+	_set_roll_position(_track.position.x)
+	var start_x := _track.position.x
+	var end_x := 120.0 - _active_slot * STEP
+	# Match velocity across all three phases, including the start of braking.
+	var speed := (end_x - start_x) / (0.45 / 2.0 + 0.9 + 2.15 / 3.0)
+	var accelerate_end := start_x + speed * 0.45 / 2.0
+	var cruise_end := accelerate_end + speed * 0.9
 	_tween = create_tween()
-	_tween.tween_property(_track, "position:x", 120 - _active_slot * STEP, 3.5).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
+	_tween.tween_method(_set_roll_position, start_x, accelerate_end, 0.45).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_tween.tween_method(_set_roll_position, accelerate_end, cruise_end, 0.9).set_trans(Tween.TRANS_LINEAR)
+	_tween.tween_method(_set_roll_position, cruise_end, end_x, 2.15).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	_tween.tween_callback(_finish)
+
+func _set_roll_position(value: float) -> void:
+	_track.position.x = value
+	for card in _cards:
+		var distance := absf(card.position.x + value - 120.0)
+		var focus := 1.0 - clampf(distance / STEP, 0.0, 1.0)
+		card.scale = Vector2.ONE * lerpf(0.88, 1.0, focus * focus * (3.0 - 2.0 * focus))
 
 func _finish() -> void:
 	var card := _cards[_active_slot]
-	card.highlighted = true
+	card.play_winner(winner_highlight_duration)
 	_hint.text = "✦ 抽中%s！" % _draw_pool[_selected].display_name
 	_tween = create_tween()
-	_tween.tween_property(card, "scale", Vector2(1.06, 1.06), winner_highlight_duration * 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	_tween.tween_property(card, "scale", Vector2.ONE, winner_highlight_duration * 0.25)
+	_tween.tween_property(card, "scale", Vector2(1.035, 1.035), winner_highlight_duration * 0.35).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_tween.tween_property(card, "scale", Vector2.ONE, winner_highlight_duration * 0.25).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	_tween.tween_interval(winner_highlight_duration * 0.4)
 	_tween.tween_callback(_begin_drop)
 
@@ -194,39 +252,66 @@ func _begin_drop() -> void:
 	var is_new := not GameData.is_lit(city.city_id)
 	_rebuild_collection(city.city_id if is_new else "")
 	var slot := GameData.lit_cities.size() if is_new else GameData.lit_cities.find(city.city_id)
-	_collection_offset = maxf(0.0, (slot - 6) * 66.0)
+	_collection_offset = maxf(0.0, (slot - (COLLECTION_VISIBLE - 1)) * COLLECTION_STEP)
 	_collection_track.position.x = -_collection_offset
 	_drop_card = CityCard.new()
 	_drop_card.city = city
-	_drop_card.position = Vector2(120, 261)
 	add_child(_drop_card)
-	_cards[_active_slot].modulate.a = 0.25
-	var destination := Vector2(12 + slot * 66 - _collection_offset - 90, 637 - 120)
-	_drop_tween = create_tween().set_parallel(true)
-	_drop_tween.tween_property(_drop_card, "position", destination, collection_drop_duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	_drop_tween.tween_property(_drop_card, "scale", Vector2(0.25, 0.25), collection_drop_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-	_drop_tween.chain().tween_callback(_complete_collection.bind(city.city_id, slot))
+	var source := _cards[_active_slot]
+	_drop_origin = get_global_transform().affine_inverse() * source.global_position
+	_drop_card.position = _drop_origin
+	# The moving card is the sole visible copy of the collected city.
+	for card in _cards:
+		if card.city.city_id == city.city_id:
+			card.hide()
+	# Close the hole near the end of the flight, preserving the same neighbours.
+	if _draw_pool.size() > 1:
+		var take_previous := _selected == _draw_pool.size() - 1
+		_tween = create_tween().set_parallel(true)
+		for card in _cards:
+			var distance := card.position.x + _track.position.x - 120.0
+			if card.visible and absf(distance) <= STEP * 3.0 and ((take_previous and distance < 0.0) or (not take_previous and distance > 0.0)):
+				var destination_x := card.position.x + (STEP if take_previous else -STEP)
+				_tween.tween_property(card, "position:x", destination_x, collection_drop_duration * 0.45).set_delay(collection_drop_duration * 0.55).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+				var destination_scale := Vector2.ONE if absf(distance) < STEP * 1.1 else Vector2(0.88, 0.88)
+				_tween.tween_property(card, "scale", destination_scale, collection_drop_duration * 0.45).set_delay(collection_drop_duration * 0.55).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	var target_scale := COLLECTION_CARD / Vector2(240, 320)
+	_drop_scale = target_scale
+	_drop_destination = _collection_view.position + Vector2(slot * COLLECTION_STEP - _collection_offset, 0) - _drop_card.pivot_offset * (Vector2.ONE - target_scale)
+	_drop_tween = create_tween()
+	_drop_tween.tween_method(_set_drop_progress, 0.0, 1.0, collection_drop_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_drop_tween.tween_callback(_complete_collection.bind(city.city_id, slot))
+
+func _set_drop_progress(progress: float) -> void:
+	if not is_instance_valid(_drop_card):
+		return
+	_drop_card.position = _drop_origin.lerp(_drop_destination, progress) + Vector2(0, -36.0 * sin(progress * PI))
+	_drop_card.scale = Vector2.ONE.lerp(_drop_scale, progress)
+	_drop_card.rotation = deg_to_rad(-2.0) * sin(progress * PI)
 
 func _complete_collection(city_id: String, slot: int) -> void:
+	if _tween and _tween.is_running():
+		_tween.kill()
 	GameData.set_lit(city_id)
 	EventBus.city_lit.emit(city_id)
 	if is_instance_valid(_drop_card):
+		_drop_card.hide()
 		_drop_card.queue_free()
 	_drop_card = null
 	_selected = mini(_selected, maxi(0, _draw_pool.size() - 2))
 	_rebuild_draw_pool()
 	_busy = false
-	_autoplay_remaining = autoplay_resume_delay
+	_autoplay_remaining = autoplay_after_draw_delay
 	_rebuild_collection()
-	_collection_offset = maxf(0.0, (slot - 6) * 66.0)
+	_collection_offset = maxf(0.0, (slot - (COLLECTION_VISIBLE - 1)) * COLLECTION_STEP)
 	_collection_track.position.x = -_collection_offset
 	_collection_wait = collection_scroll_delay
 	_refresh()
 	_hint.text = "✦ 已收藏%s！点击小卡片查看攻略" % GameData.get_city(city_id).display_name
 	var target := _thumbs[slot]
 	var pulse := create_tween()
-	pulse.tween_property(target, "scale", Vector2(1.12, 1.12), 0.14)
-	pulse.tween_property(target, "scale", Vector2.ONE, 0.2)
+	pulse.tween_property(target, "scale", Vector2(1.04, 1.04), 0.12).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	pulse.tween_property(target, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 func _rebuild_collection(pending_id: String = "") -> void:
 	for child in _collection_track.get_children():
@@ -234,27 +319,39 @@ func _rebuild_collection(pending_id: String = "") -> void:
 		child.queue_free()
 	_thumbs.clear()
 	_collection_count = GameData.lit_cities.size()
-	var slots: int = maxi(7, _collection_count + (1 if not pending_id.is_empty() else 0))
-	var copies := 2 if _collection_count > 7 else 1
+	var slots: int = maxi(COLLECTION_VISIBLE, _collection_count + (1 if not pending_id.is_empty() else 0))
+	var copies := 2 if _collection_count > COLLECTION_VISIBLE else 1
 	for copy in range(copies):
 		for i in range(slots):
 			var city_id: String = GameData.lit_cities[i] if i < _collection_count else ""
-			var b := GuideUI.button(_collection_track, "", Rect2((copy * slots + i) * 66, 0, 60, 87), _open_collected.bind(city_id))
-			b.pivot_offset = Vector2(30, 43)
+			var b := GuideUI.button(_collection_track, "", Rect2(Vector2((copy * slots + i) * COLLECTION_STEP, 0), COLLECTION_CARD), _open_collected.bind(city_id))
+			b.pivot_offset = COLLECTION_CARD / 2
 			if city_id.is_empty():
 				b.disabled = true
 				b.add_theme_stylebox_override("disabled", StyleBoxEmpty.new())
-				var locked := GuideUI.picture(b, GuideUI.locked_art(), Rect2(0, 0, 60, 87))
+				var locked := GuideUI.picture(b, GuideUI.locked_art(), Rect2(Vector2.ZERO, COLLECTION_CARD))
 				locked.stretch_mode = TextureRect.STRETCH_SCALE
 			else:
 				var city := GameData.get_city(city_id)
-				GuideUI.skin_frame(b, 0.045)
-				GuideUI.picture(b, city.cover_texture, Rect2(4, 4, 52, 54))
-				GuideUI.panel(b, Rect2(4, 58, 52, 25), Color("22683f"), 5, GuideUI.GOLD, 1)
-				GuideUI.label(b, city.display_name, Rect2(1, 59, 50, 21), 13, Color("fff7df"), true)
-				GuideUI.label(b, "♥", Rect2(48, 68, 9, 12), 9, GuideUI.GOLD, true)
-				for x in [4, 49]:
-					GuideUI.label(b, "♥", Rect2(x, 55, 8, 10), 8, GuideUI.GOLD, true)
+				for state in ["normal", "hover", "pressed", "focus"]:
+					b.add_theme_stylebox_override(state, StyleBoxEmpty.new())
+				GuideUI.component_picture(b, "home_collected_card", Rect2(Vector2.ZERO, COLLECTION_CARD))
+				GuideUI.rounded_picture(b, city.cover_texture, Rect2(7, 8, 70, 76), 9.0)
+				var city_name := Label.new()
+				city_name.name = "CollectionCityName"
+				city_name.text = city.display_name
+				city_name.clip_text = true
+				city_name.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				city_name.add_theme_font_override("font", load("res://assets/fonts/楷体.ttf"))
+				city_name.add_theme_font_size_override("font_size", 13)
+				city_name.add_theme_color_override("font_color", Color("fff7df"))
+				city_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+				city_name.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+				city_name.scale = Vector2.ONE
+				b.add_child(city_name)
+				city_name.position = COLLECTION_NAME_RECT.position
+				city_name.size = COLLECTION_NAME_RECT.size
+				GuideUI.fit_label(city_name, 13, 1.0)
 			if copy == 0:
 				_thumbs.append(b)
 	_collection_offset = 0.0
@@ -275,7 +372,7 @@ func _refresh() -> void:
 		_button.text = "全部城市已收藏"
 		_hint.text = "城市收集完成 · 点击小卡片重温旅程"
 		return
-	_button.text = "再点亮一座城市" if GameData.lit_count() > 0 else "随机点亮"
+	_button.text = "随机点亮"
 	var lit: bool = GameData.is_lit(_draw_pool[_selected].city_id)
 	_hint.text = "已点亮%s · 点击中央卡片进入攻略" % _draw_pool[_selected].display_name if lit else "点击「随机点亮」，开启一场美食奇遇"
 	for i in range(_cards.size()):
@@ -289,7 +386,7 @@ func _rebuild_draw_pool() -> void:
 	_cards.clear()
 	_draw_pool.clear()
 	for city in GameData.cities:
-		if not city.locked and not GameData.is_lit(city.city_id):
+		if not city.locked and city.map_texture != null and not GameData.is_lit(city.city_id):
 			_draw_pool.append(city)
 	if _draw_pool.is_empty():
 		_track.position.x = 0.0

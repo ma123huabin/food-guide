@@ -34,8 +34,10 @@ func _build_cities() -> void:
 			food.image_texture = _image(item.get("image", {}))
 			food.urban_district = item.get("urban_district", "")
 			city.popular_foods.append(food)
-			var p: Array = item.get("map_position", [0.5, 0.5])
-			city.food_spots.append(_pack_spot(item.name, item.get("district", "城市特色"), float(p[0]), float(p[1]), item.get("description", "")))
+			# Only mapped foods get a pin; do not invent central coordinates for new foods.
+			var p: Array = item.get("map_position", [])
+			if p.size() == 2:
+				city.food_spots.append(_pack_spot(item.name, item.get("urban_district", item.get("district", "城市特色")), float(p[0]), float(p[1]), item.get("description", "")))
 		cities.append(city)
 	ACTIVE_CITY_COUNT = cities.size()
 

@@ -35,16 +35,18 @@ func run() -> void:
 	check(gd.cities.size() == 25, "five original cities plus twenty destinations")
 	var ids: Array[String] = []
 	for city in gd.cities:
-		check(city.cover_texture != null and city.popular_foods.size() == 4 and not ids.has(city.city_id), "catalog and cover: " + city.display_name)
+		check(city.cover_texture != null and not city.popular_foods.is_empty() and not ids.has(city.city_id), "catalog and cover: " + city.display_name)
 		ids.append(city.city_id)
 		main.detail.load_city(city.city_id)
 		if city.map_texture == null:
 			check(main.detail._check_button.disabled, "new city does not fake location coverage: " + city.city_id)
 	check(gd.get_city("quanzhou").cover_texture != gd.get_city("quanzhou").map_texture, "Quanzhou cover and map are separate assets")
-	check(home._thumbs.size() == 7, "fresh collection has seven locked slots")
+	check(home._thumbs.size() == 5, "fresh collection has five locked slots")
+	check(home._thumbs[4].position.x + home._thumbs[4].size.x == home._collection_view.size.x, "five cards exactly fill collection viewport")
+	check(home._collection_view.position.y + home._collection_view.size.y < home._button.position.y, "larger cards stay above action button")
 	for card in home._thumbs:
 		var images: Array[Node] = card.find_children("*", "TextureRect", true, false)
-		check(card.disabled and images.size() == 1 and images[0].texture is AtlasTexture and images[0].texture.atlas.resource_path == "res://img/界面皮肤/待解锁参考.png", "locked slot uses shared default instead of city cover")
+		check(card.disabled and images.size() == 1 and images[0].texture is AtlasTexture and images[0].texture.atlas.resource_path == "res://img/界面组件/home_locked_card.png", "locked slot uses shared default instead of city cover")
 	await capture("collection-empty.png")
 	home._draw_city()
 	await create_timer(3.65).timeout
@@ -72,8 +74,8 @@ func run() -> void:
 	home._collection_wait = 0.0
 	var before: float = home._collection_track.position.x
 	await create_timer(0.2).timeout
-	check(home._collection_count > 7 and home._collection_track.position.x < before, "more than seven collected cities move right to left")
-	home._collection_offset = home._collection_count * 66.0 - 0.1
+	check(home._collection_count > 5 and home._collection_track.position.x < before, "more than five collected cities move right to left")
+	home._collection_offset = home._collection_count * home.COLLECTION_STEP - 0.1
 	await create_timer(0.1).timeout
 	check(home._collection_offset < 10.0, "collection loops continuously without blank tail")
 	await capture("collection-many.png")

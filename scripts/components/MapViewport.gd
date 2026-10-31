@@ -29,10 +29,28 @@ func configure(texture: Texture2D, spots: Array[FoodSpotData]) -> void:
 		var point := Vector2(spots[i].pos_x, spots[i].pos_y) * _world.size
 		_spots.append(point)
 		# Pin graphics ignore input so dragging over a pin still pans the map.
-		GuideUI.panel(_world, Rect2(point - Vector2(19, 19), Vector2(38, 38)), Color("e84035"), 19, Color("fff5ce"), 3)
-		GuideUI.label(_world, "●", Rect2(point - Vector2(15, 15), Vector2(30, 30)), 14, Color("ffcf73"), true)
-		GuideUI.panel(_world, Rect2(point + Vector2(-46, 23), Vector2(92, 25)), Color(1, 0.97, 0.85, 0.95), 12)
-		GuideUI.label(_world, spots[i].name, Rect2(point + Vector2(-46, 23), Vector2(92, 25)), 12, GuideUI.INK, true)
+		GuideUI.component_picture(_world, "detail_food_pin", Rect2(point + Vector2(-46, -37), Vector2(92, 90)))
+		var city := get_parent().get_parent().get("_city") as CityData
+		var food: PopularFoodData = null
+		if city != null:
+			for candidate in city.popular_foods:
+				if candidate.name == spots[i].name:
+					food = candidate
+					break
+		if food != null:
+			if food.image_texture != null:
+				var picture := GuideUI.picture(_world, food.image_texture, Rect2(point + Vector2(-18, -28), Vector2(36, 36)))
+				picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+				var shader := Shader.new()
+				shader.code = """shader_type canvas_item;
+void fragment() {
+ COLOR *= texture(TEXTURE, UV);
+ COLOR.a *= 1.0 - smoothstep(0.46, 0.50, length(UV - vec2(0.5)));
+}"""
+				var circle := ShaderMaterial.new()
+				circle.shader = shader
+				picture.material = circle
+		GuideUI.label(_world, spots[i].name, Rect2(point + Vector2(-41, 26), Vector2(82, 22)), 12, GuideUI.INK, true)
 	_fit()
 	resized.connect(_fit)
 

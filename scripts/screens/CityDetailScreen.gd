@@ -39,9 +39,7 @@ func load_city(city_id: String) -> void:
 	if _city == null:
 		return
 	var back := GuideUI.button(_dynamic, "‹  返回", Rect2(20, 24, 80, 34), func() -> void: EventBus.request_home.emit())
-	back.add_theme_font_size_override("font_size", 20)
-	for state in ["normal", "hover", "pressed"]:
-		back.add_theme_stylebox_override(state, GuideUI.box(GuideUI.CREAM, 15, Color("b58c46"), 2))
+	GuideUI.image_button(back, "detail_back_button")
 	var header := GuideUI.label(_dynamic, "%s · 寻味地图" % _city.display_name, Rect2(107, 24, 267, 34), 22, GuideUI.INK, true)
 	var title_frame := ReferenceFrame.new()
 	title_frame.kind = "title"
@@ -50,6 +48,9 @@ func load_city(city_id: String) -> void:
 	_dynamic.add_child(title_frame)
 	_dynamic.move_child(title_frame, header.get_index())
 	header.add_theme_font_override("font", load("res://assets/fonts/行楷.ttf"))
+	header.position.x += 42
+	header.size.x -= 84
+	GuideUI.fit_label(header, 22)
 	header.add_theme_constant_override("outline_size", 0)
 	header.add_theme_color_override("font_outline_color", GuideUI.CREAM)
 	header.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -89,7 +90,7 @@ void fragment() {
 		GuideUI.label(_dynamic, "✧", Rect2(0, 168, 480, 80), 48, GuideUI.GOLD, true)
 		GuideUI.label(_dynamic, _city.display_name + "美食地图绘制中", Rect2(0, 263, 480, 40), 23, Color("6b2615"), true)
 		GuideUI.label(_dynamic, "从下方美食卡片，认识这座城市的味道", Rect2(0, 320, 480, 30), 13, Color("80583c"), true)
-	var map_note := GuideUI.label(_dynamic, "手绘点位为风味示意，非实时导航地图" if map_texture != null else "城市美食地图与城市封面图独立制作", Rect2(0, 520, 480, 20), 10, Color("6b2615"), true)
+	var map_note := GuideUI.label(_dynamic, "手绘点位为风味示意，非实时导航地图" if map_texture != null else "城市美食地图与城市封面图独立制作", Rect2(0, 733, 480, 20), 10, Color("6b2615"), true)
 	map_note.add_theme_constant_override("outline_size", 3)
 	map_note.add_theme_color_override("font_outline_color", GuideUI.CREAM)
 	# Fixed overlay: map moves underneath while the food tray stays in place.
@@ -101,21 +102,25 @@ void fragment() {
 	tray.mouse_filter = Control.MOUSE_FILTER_STOP
 	var tray_style := tray.get_theme_stylebox("panel") as StyleBoxFlat
 	tray_style.shadow_color = Color(0.0, 0.12, 0.20, 0.25)
-	tray_style.shadow_size = 14
+	tray_style.shadow_size = 0
 	tray_style.shadow_offset = Vector2(0, 6)
 	var tray_title := GuideUI.label(tray, "推荐美食点", Rect2(40, 6, 364, 30), 23, Color("7e210c"), true)
 	tray_title.add_theme_font_override("font", load("res://assets/fonts/行楷.ttf"))
-	GuideUI.label(tray, "舌尖上的%s" % _city.display_name, Rect2(40, 36, 364, 18), 11, Color("85674d"), true)
-	var heading := GuideUI.button(tray, "", Rect2(0, 0, 392, 54), _toggle_food_tray)
+	
+	var heading := GuideUI.button(tray, "", Rect2(0, 0, 354, 40), _toggle_food_tray)
 	for state in ["normal", "hover", "pressed", "focus"]:
 		heading.add_theme_stylebox_override(state, StyleBoxEmpty.new())
-	_tray_toggle = GuideUI.button(tray, "⌄", Rect2(394, 8, 36, 32), _toggle_food_tray)
+	_tray_toggle = GuideUI.button(tray, "", Rect2(372, 13, 28, 21), _toggle_food_tray)
+	var toggle_art := GuideUI.image_button(_tray_toggle, "detail_collapse_button")
+	_tray_toggle.size = Vector2(28, 21)
+	toggle_art.name = "ToggleArt"
 	_tray_toggle.name = "TrayToggle"
 	_tray_toggle.tooltip_text = "收起推荐美食"
 	var scroll := ScrollContainer.new()
 	_food_scroll = scroll
-	scroll.position = Vector2(11, 58)
-	scroll.size = Vector2(422, 116)
+	# Keep the entire scrolling strip inside the outer frame's corner ornaments.
+	scroll.position = Vector2(32, 40)
+	scroll.size = Vector2(380, 128)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
 	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	tray.add_child(scroll)
@@ -125,39 +130,63 @@ void fragment() {
 	for i in range(_city.popular_foods.size()):
 		var food: PopularFoodData = _city.popular_foods[i]
 		var holder := Control.new()
-		holder.custom_minimum_size = Vector2(112, 114)
+		holder.custom_minimum_size = Vector2(112, 128)
 		row.add_child(holder)
-		var card := GuideUI.button(holder, "", Rect2(0, 0, 112, 112), _show_food.bind(i))
+		var card := GuideUI.button(holder, "", Rect2(0, 0, 112, 126), _show_food.bind(i))
 		GuideUI.skin_frame(card, 0.06)
 		card.name = "FoodCard%d" % i
-		GuideUI.food_art(card, _city, i, Rect2(7, 5, 98, 62))
-		var food_title := GuideUI.label(card, food.name, Rect2(3, 67, 106, 23), 16, GuideUI.INK, true)
+		for state in ["normal", "hover", "pressed", "focus"]:
+			card.add_theme_stylebox_override(state, StyleBoxEmpty.new())
+		GuideUI.food_art(card, _city, i, Rect2(7, 5, 98, 72))
+		var food_title := GuideUI.label(card, food.name, Rect2(3, 81, 106, 20), 14, GuideUI.INK, true)
 		food_title.add_theme_font_override("font", load("res://assets/fonts/行楷.ttf"))
-		GuideUI.panel(card, Rect2(7, 92, 98, 16), Color("dce5c7"), 8)
-		GuideUI.label(card, food.district, Rect2(7, 91, 98, 18), 10, Color("526344"), true)
+		GuideUI.fit_label(food_title, 14)
+		# Inset the chip above the bottom rim and away from both corner flourishes.
+		GuideUI.component_picture(card, "detail_district_chip", Rect2(10, 100, 92, 18))
+		var region := food.urban_district if not food.urban_district.is_empty() else food.district
+		var region_label := GuideUI.label(card, region, Rect2(10, 100, 92, 18), 10, Color("526344"), true)
+		GuideUI.fit_label(region_label, 10)
 	var gesture := Control.new()
+	gesture.name = "FoodGesture"
 	gesture.position = scroll.position
 	gesture.size = scroll.size
 	gesture.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	gesture.gui_input.connect(_on_food_input)
 	tray.add_child(gesture)
+	var rim := GuideUI.component_picture(tray, "detail_recommendation_panel", Rect2(Vector2.ZERO, tray.size))
+	rim.name = "TrayForegroundRim"
+	rim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var rim_shader := Shader.new()
+	rim_shader.code = """shader_type canvas_item;
+uniform vec2 panel_size;
+void fragment() {
+ vec2 edge = min(UV, vec2(1.0) - UV) * panel_size;
+ float is_rim = 1.0 - step(6.0, min(edge.x, edge.y));
+ float is_corner = (1.0 - step(27.0, edge.x)) * (1.0 - step(28.0, edge.y));
+ COLOR *= texture(TEXTURE, UV);
+ COLOR.a *= max(is_rim, is_corner);
+}"""
+	var rim_material := ShaderMaterial.new()
+	rim_material.shader = rim_shader
+	rim_material.set_shader_parameter("panel_size", tray.size)
+	rim.material = rim_material
+	tray.resized.connect(func() -> void: rim_material.set_shader_parameter("panel_size", tray.size))
+	tray.move_child(_tray_toggle, tray.get_child_count() - 1)
 	_check_button = GuideUI.button(_dynamic, "", Rect2(28, 756, 424, 61), _check_in, true)
 	_refresh_button()
 
 func _refresh_button() -> void:
 	if _check_button == null or _city == null:
 		return
-	if not LocationService.has_boundary(_city.city_id):
-		_check_button.disabled = true
-		_check_button.text = "打卡核验筹备中"
-		return
 	_check_button.disabled = not _pending_city.is_empty() or GameData.checkins.has(_city.city_id)
-	_check_button.text = "✓  已留下美食足迹" if GameData.checkins.has(_city.city_id) else ("正在核验定位…" if not _pending_city.is_empty() else "我要打卡")
+	_check_button.text = "✓  城市已点亮" if GameData.checkins.has(_city.city_id) else ("正在定位…" if not _pending_city.is_empty() else "点亮城市")
 
 func _toggle_food_tray() -> void:
 	_tray_collapsed = not _tray_collapsed
+	_food_scroll.visible = not _tray_collapsed
+	_food_tray.get_node("FoodGesture").visible = not _tray_collapsed
 	_food_pressing = false
-	_tray_toggle.text = "⌃" if _tray_collapsed else "⌄"
+	(_tray_toggle.get_node("ToggleArt") as TextureRect).flip_v = _tray_collapsed
 	_tray_toggle.tooltip_text = "展开推荐美食" if _tray_collapsed else "收起推荐美食"
 	if _tray_tween:
 		_tray_tween.kill()
@@ -220,10 +249,11 @@ func _food_message(index: int) -> void:
 	food_name.name = "FoodName"
 	food_name.add_theme_font_override("font", load("res://assets/fonts/行楷.ttf"))
 	food_name.add_theme_color_override("font_color", Color("650b04"))
+	GuideUI.fit_label(food_name, roundi(56 * scale_factor))
 	var district := food.urban_district
 	if district.is_empty() and (food.district.ends_with("区") or food.district.ends_with("市") or food.district.ends_with("县")):
 		district = food.district
-	var district_text := "所在城区 · " + district if not district.is_empty() else "所在城区 · 待补充"
+	var district_text := "推荐区域 · " + district if not district.is_empty() else "推荐区域 · 待补充"
 	var area := GuideUI.label(panel, district_text, Rect2(18, 572 * scale_factor, width - 36, 38 * scale_factor), roundi(23 * scale_factor), Color("85674d"), true)
 	area.name = "FoodDistrict"
 	var acknowledge := GuideUI.button(panel, "知道了", Rect2(90 * scale_factor, 630 * scale_factor, 362 * scale_factor, 82 * scale_factor), _close_modal, true)
@@ -275,10 +305,56 @@ func _close_modal() -> void:
 	_modal = null
 
 func _check_in() -> void:
-	if not _pending_city.is_empty() or _city == null:
+	if not _pending_city.is_empty() or _city == null or GameData.checkins.has(_city.city_id):
+		return
+	if not LocationService.has_boundary(_city.city_id):
+		_location_dialog("城市核验筹备中", _city.display_name + "的位置核验暂未开放。\n你可以先浏览美食地图，开放后再来点亮。", "继续逛逛", _close_modal)
+		return
+	_location_dialog("点亮" + _city.display_name, "需要获取一次当前位置，确认你已到达" + _city.display_name + "。\n位置仅用于本次城市核验，不保存坐标。\n继续后，请在系统或浏览器中允许位置访问。", "同意并定位", _begin_location, true)
+
+func _location_dialog(title: String, body: String, action_text: String, action: Callable, dismissible: bool = false) -> void:
+	_popup_shell()
+	var old_panel := _modal.get_child(_modal.get_child_count() - 1)
+	_modal.remove_child(old_panel)
+	old_panel.queue_free()
+	var panel := GuideUI.panel(_modal, Rect2((size.x - 360) / 2, (size.y - 290) / 2, 360, 290), GuideUI.CREAM, 22)
+	panel.name = "LocationDialog"
+	panel.clip_contents = true
+	var headline := GuideUI.label(panel, title, Rect2(20, 20, 320, 38), 24, GuideUI.INK, true)
+	headline.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	headline.size = Vector2(320, 38)
+	var body_scroll := ScrollContainer.new()
+	body_scroll.name = "LocationBody"
+	body_scroll.position = Vector2(24, 70)
+	body_scroll.size = Vector2(312, 120)
+	body_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	panel.add_child(body_scroll)
+	# Enable wrapping before assigning text so a long line cannot inflate its width.
+	var copy := Label.new()
+	copy.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	copy.custom_minimum_size.y = 120
+	copy.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	copy.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	copy.add_theme_font_override("font", load("res://assets/fonts/楷体.ttf"))
+	copy.add_theme_font_size_override("font_size", 16)
+	copy.add_theme_color_override("font_color", GuideUI.INK)
+	copy.text = body
+	body_scroll.add_child(copy)
+	if not action_text.is_empty():
+		var primary := GuideUI.button(panel, action_text, Rect2(36, 199, 288, 44), action, true)
+		primary.name = "LocationPrimary"
+	if dismissible:
+		var cancel := GuideUI.button(panel, "暂不授权" if action_text == "同意并定位" else "稍后再说", Rect2(90, 248, 180, 30), _close_modal)
+		for state in ["normal", "hover", "pressed", "focus"]:
+			cancel.add_theme_stylebox_override(state, StyleBoxEmpty.new())
+
+func _begin_location() -> void:
+	if _city == null or not _pending_city.is_empty() or GameData.checkins.has(_city.city_id):
 		return
 	_pending_city = _city.city_id
 	_refresh_button()
+	_location_dialog("正在确认你的位置", "正在获取当前位置并核验城市范围…\n请保持定位服务开启，这可能需要几秒钟。", "", Callable())
 	LocationService.request_location()
 
 func _on_location(_lat: float, _lng: float) -> void:
@@ -286,17 +362,16 @@ func _on_location(_lat: float, _lng: float) -> void:
 		return
 	var requested := GameData.get_city(_pending_city)
 	_pending_city = ""
-	var distance: float = LocationService.distance_to_city(requested)
 	if LocationService.is_within_city(requested):
 		GameData.record_checkin(requested.city_id)
-		_message("打卡成功 · " + requested.display_name, "你已在核验范围内！\n这一次的城市美食足迹，已为你珍藏。")
+		_location_dialog("已点亮 · " + requested.display_name, "打卡成功！\n已确认你在" + requested.display_name + "，城市足迹已保存。\n继续发现当地的美味吧。", "继续探索", _close_modal)
 	else:
-		_message("还未到达" + requested.display_name, "当前位置不在该城市行政区范围内，\n距市中心约 %.0f 公里，到达后再来打卡吧。" % distance)
+		_location_dialog("还未到达" + requested.display_name, "当前位置不在" + requested.display_name + "行政区范围内。\n到达这座城市后，即可点亮。\n如果位置有偏差，请开启精确位置后重试。", "重新定位", _begin_location, true)
 	_refresh_button()
 
 func _on_failed(reason: String) -> void:
 	if _pending_city.is_empty():
 		return
 	_pending_city = ""
-	_message("暂时无法完成打卡", reason)
+	_location_dialog("暂时无法获取位置", reason + "\n请在系统或浏览器设置中允许位置访问，开启定位服务后重试。", "重新定位", _begin_location, true)
 	_refresh_button()

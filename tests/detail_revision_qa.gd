@@ -23,15 +23,22 @@ func run() -> void:
 	await process_frame
 	await process_frame
 	check(detail._food_scroll.get_child(0).get_child(0).size.x == 112, "initial viewport shows three and a half cards")
+	check(detail._food_scroll.position == Vector2(32, 40) and detail._food_scroll.size == Vector2(380, 128), "recommendations leave both outer corner ornaments clear")
+	check(detail._tray_toggle.position == Vector2(372, 13) and detail._tray_toggle.size == Vector2(28, 21), "collapse control matches the marked rectangle")
+	check(detail._food_tray.get_node("TrayForegroundRim").get_index() > detail._food_scroll.get_index(), "outer frame renders above food cards")
+	for label in detail._food_tray.find_children("*", "Label", true, false):
+		check(not label.text.begins_with("舌尖上的"), "recommendation subtitle is removed")
 	await capture("revised-chongqing")
 	detail._toggle_food_tray()
 	await create_timer(0.3).timeout
 	check(detail._food_tray.position.y == 676 and detail._food_tray.size.y == 54, "collapse moves tray down to its heading")
+	check(not detail._food_scroll.visible, "collapsed heading exposes no food card strip")
 	await capture("revised-collapsed")
 	detail._toggle_food_tray()
 	await create_timer(0.3).timeout
 	check(detail._food_tray.position.y == 550 and detail._food_tray.size.y == 180, "expand restores tray")
 	var city = detail._city
+	var original_food_count: int = city.popular_foods.size()
 	city.popular_foods.append(city.popular_foods[0])
 	city.popular_foods.append(city.popular_foods[1])
 	detail.load_city("chongqing")
@@ -48,7 +55,7 @@ func run() -> void:
 	press.position = drag.position
 	detail._on_food_input(press)
 	check(detail._food_scroll.scroll_horizontal > 0 and not is_instance_valid(detail._modal), "six foods swipe without opening modal")
-	city.popular_foods.resize(4)
+	city.popular_foods.resize(original_food_count)
 	detail.load_city("chengdu")
 	detail._show_food(0)
 	await process_frame
